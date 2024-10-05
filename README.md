@@ -27,7 +27,7 @@ python3 manage.py runserver
 
 # Dependencias:
 
-    + `pip install Django`
+    + pip install Django
 
 # Desarrollo
 
