@@ -17,6 +17,18 @@ Repositorio oficial del Proyecto Intermedio "Aplicación de Seguimiento de Hábi
 - Mendiola Montes Victor Manuel
 - García Zárraga Angélica Lizbeth
 
+# Ejecución:
+
+Activa el entorno virtual.
+
+```bash
+python3 manage.py runserver
+```
+
+# Dependencias:
+
+    + `pip install Django`
+
 # Desarrollo
 
 ## `/mainapp`
