@@ -16,3 +16,9 @@ Repositorio oficial del Proyecto Intermedio "Aplicación de Seguimiento de Hábi
 - Morales Hidalgo Pedro
 - Mendiola Montes Victor Manuel
 - García Zárraga Angélica Lizbeth
+
+# Desarrollo
+
+## `/mainapp`
+
+Aplicacion principal, aqui se agregan las cosas en general como el inicio de sesion y la pagina principal.
