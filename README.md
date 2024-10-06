@@ -19,7 +19,7 @@ Repositorio oficial del Proyecto Intermedio "Aplicación de Seguimiento de Hábi
 
 # Ejecución:
 
-Activa el entorno virtual.
+Activa el entorno virtual. Después ejecuta el siguiente comando para levantar el servidor:
 
 ```bash
 python3 manage.py runserver
