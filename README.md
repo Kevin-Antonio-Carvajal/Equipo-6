@@ -34,3 +34,17 @@ python3 manage.py runserver
 ## `/mainapp`
 
 Aplicacion principal, aqui se agregan las cosas en general como el inicio de sesion y la pagina principal.
+
+# Administradores
+
+Comando para crear super usuarios:
+
+```bash
+python3 manage.py createsuperuser
+```
+
+Ejemplo:
+
+**Usuario:** sebs
+
+**Correo:** sebastian_luis@ciencias.unam.mx
