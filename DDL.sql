@@ -1,7 +1,6 @@
---
--- OJO: Este archivo solo es una guía para el mapeo de los modelos
--- ene el proyecto de django.
---
+----------------------------------------------------------------------------------------------
+-- OJO: Este archivo solo es una guía para el mapeo de los modelos en el proyecto de django.--
+----------------------------------------------------------------------------------------------
 
 --
 -- TABLA USUARIO
