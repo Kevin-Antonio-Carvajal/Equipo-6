@@ -11,5 +11,10 @@ urlpatterns = [
         'inicio/',
         views.index,
         name='index'
+    ),
+    path(
+        'crear-habito/',
+        views.crear_habito,
+        name='crear_habito'
     )
 ]

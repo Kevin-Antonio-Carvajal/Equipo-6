@@ -2,11 +2,12 @@
 {% extends '../layouts/layout.html' %}
 
 <!-- Titulo -->
- {% block title %}
+{% block title %}
     {{ titulo }}
+{% endblock %}
+
+<!-- Contenido -->
+ {% block content %}
+    <h1>{{ titulo }}</h1>
  {% endblock %}
 
- <!-- Contenido -->
-  {% block content %}
-    <h1>{{ titulo }}</h1>
-  {% endblock %}
