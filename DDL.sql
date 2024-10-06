@@ -53,11 +53,11 @@ CREATE TABLE `Habito` (
     `id_objetivo` INT NOT NULL,
     `nombre` VARCHAR(64) NOT NULL,    
     `descripcion` VARCHAR(255) DEFAULT NULL,
-    `frecuencia` INT NOT NULL DEFAULT 1,
+    `frecuencia` INT NOT NULL DEFAULT 1, -- cuantas veces al dias se realiza
     `titulo_recordatorio` VARCHAR(64) DEFAULT 'No olvides que tienes un objetivo',
     `mensaje_recordatorio` VARCHAR(255) DEFAULT 'Recuerda que cada día se vuelve más fácil, lo dificil es hacerlo todos los días.',
-    `notificar` BOOLEAN DEFAULT TRUE,
-    `estatus` BOOLEAN DEFAULT TRUE,
+    `notificar` BOOLEAN DEFAULT TRUE, -- si se notifica al usuario o no
+    `estatus` BOOLEAN DEFAULT TRUE, -- habilitado o inhabilitado
     `fecha_creacion` TIMESTAMP NOT NULL DEFAULT current_timestamp()
 );
 -- Llave primaria --
@@ -125,7 +125,7 @@ ON UPDATE CASCADE;
 CREATE TABLE `Registro` (
     `id_registro` INT NOT NULL AUTO_INCREMENT UNIQUE,
     `id_habito` INT NOT NULL,
-    `estatus` BOOLEAN DEFAULT TRUE,
+    `estatus` BOOLEAN DEFAULT TRUE, -- completado o incompleto
     `fecha_creacion` TIMESTAMP NOT NULL DEFAULT current_timestamp()
 );
 -- Llave primaria --

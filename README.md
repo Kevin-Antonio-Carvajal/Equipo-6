@@ -48,3 +48,7 @@ Ejemplo:
 **Usuario:** sebs
 
 **Correo:** sebastian_luis@ciencias.unam.mx
+
+# Ayuda
+
+En caso de que los estilos CSS no se vean reflejados en la página, presiona `Ctrl+F5`, esto sucede porque el navegador guarda los estilos css en caché.
