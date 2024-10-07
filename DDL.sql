@@ -51,6 +51,7 @@ CREATE TABLE `Habito` (
     `id_habito` INT NOT NULL AUTO_INCREMENT UNIQUE,
     `id_usuario` INT NOT NULL,
     `id_objetivo` INT NOT NULL,
+    `id_categoria` INT NOT NULL,
     `nombre` VARCHAR(64) NOT NULL,    
     `descripcion` VARCHAR(255) DEFAULT NULL,
     `frecuencia` INT NOT NULL DEFAULT 1, -- cuantas veces al dias se realiza
@@ -92,32 +93,6 @@ CREATE TABLE `Categoria` (
 ALTER TABLE `Categoria`
 ADD CONSTRAINT `pk_Categoria`
 PRIMARY KEY (`id_categoria`);
-
---
--- TABLA CATEGORIZADO
---
-CREATE TABLE `Categorizado` (
-    `id_habito` INT NOT NULL,
-    `id_categoria` INT NOT NULL
-);
--- Llaves primarias
-ALTER TABLE `Categorizado`
-ADD CONSTRAINT `pk_Categorizado`
-PRIMARY KEY (`id_habito`, `id_categoria`);
--- Llaves foraneas --
-ALTER TABLE `Categorizado`
-ADD CONSTRAINT `fk_CategorizadoHabito`
-FOREIGN KEY (`id_habito`)
-REFERENCES `Habito`(`id_habito`)
-ON DELETE CASCADE
-ON UPDATE CASCADE;
--- Llave foranea Categoria --
-ALTER TABLE `Categorizado`
-ADD CONSTRAINT `fk_CategorizadoCategoria`
-FOREIGN KEY (`id_categoria`)
-REFERENCES `Categoria`(`id_categoria`)
-ON DELETE CASCADE
-ON UPDATE CASCADE;
 
 --
 -- TABLA REGISTRO

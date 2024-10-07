@@ -1,6 +1,9 @@
 <!-- Agregamos el Layout -->
 {% extends '../layouts/layout.html' %}
 
+<!-- Cargamos el directorio Static-->
+{% load static %}
+
 <!-- Titulo -->
 {% block title %}
     {{ titulo }}
@@ -8,6 +11,97 @@
 
 <!-- Contenido -->
  {% block content %}
-    <h1>{{ titulo }}</h1>
+    <!-- Estilos -->
+    {% block styles %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/crear_habito.css' %}">
+    {% endblock %}
+    <div class="main-container">
+        <div class="crear-habito-container">            
+            <div class="subtitle">
+                <i class="fa-solid fa-arrow-left back"></i>
+                <h4>{{ titulo }}</h4>
+                <!-- Lo colocamos para distribuir el titulo -->
+                <i class="fa-solid fa-x tache"></i>
+            </div>
+            <!-- Formulario -->
+            <div class="form-container">
+                <h4>Detalles del nuevo hábito</h4>                
+                <form action="{% url 'guardar_habito' %}" method="GET">
+                    <!-- Categorias -->
+                     <div id="categorias">
+                        <div id="btn-agregar-categoria" data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar categoria" onclick="openModalSeleccionaCategoria(event)">
+                            <i class="fa-solid fa-tag icono-categoria"></i>
+                            <i class="fa-solid fa-plus"></i>
+                        </div>
+                     </div>                    
+                     <!-- <div class="categorias">
+                        <div class="categoria">
+                            <i class="fa-solid fa-tag icono-categoria"></i>
+                            Salud
+                        </div>
+                        <div class="categoria">
+                            <i class="fa-solid fa-tag icono-categoria"></i>
+                            Salud
+                        </div>
+                     </div> -->
+                    <!-- Nombre -->
+                    <label for="nombre">Nombre</label>                    
+                    <p><input type="text" name="nombre" placeholder="Ej: Hacer ejercicio"></p>
+                    <!-- Descripcion -->
+                    <label for="descripcion">Descripcion (opcional)</label>
+                    <p><textarea name="descripcion"></textarea></p>
+                    <!-- Frecuencia -->
+                    <label for="frecuencia">Frecuencia (veces al día)</label>
+                    <p><input type="number" name="frecuencia" min="1" value="1" required></p>
+                    <!-- Objetivo -->
+                    <label for="objetivo">Objetivo</label>   
+                    <div id="objetivos">
+                        <input type="radio" id="diario" name="frecuencia" value="diario" checked>
+                        <label for="diario">Diario</label><br>
+                        <input type="radio" id="semanal" name="frecuencia" value="semanal">
+                        <label for="semanal">Semanal</label><br>
+                        <input type="radio" id="mensual" name="frecuencia" value="mensual">
+                        <label for="mensual">Mensual</label><br>                                              
+                    </div>
+                    <div id="recordar-container">
+                        <span>Activar recordatorios</span>
+                        <!-- Aqui se carga el switch de notificaciones con JavaScript -->
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="switch-recordatorio" style="width: 50px; height: 24px;">
+                            <label class="form-check-label" for="flexSwitchCheckDefault"></label>
+                        </div>
+                    </div>
+                    <input id="btn-enviar" type="submit" value="Crear">
+                </form> 
+            </div> 
+            <!-- Modal de seleccion de categorias -->
+            <div id="modal-selecciona-categoria" class="modal-propio">
+                <div id="modal-content">                    
+                    <div id="seleccion-categorias-container" class="modal-content">
+                        <div class="close-container" onclick="closeModalSeleccionaCategoria(event)">
+                            <div class="close-btn">
+                                <i class="fa-solid fa-x"></i>
+                            </div>
+                        </div>
+                        <div class="seleccion-categorias-title">
+                            <h4>Selecciona una categoria</h4>
+                        </div>
+                        <div id="categorias-disponibles">
+                            {% for categoria in categorias %}
+                            <div id="categoria-{{ categoria.id_categoria }}" class="categoria" style="cursor: pointer;" onclick="clickEtiquetaDisponible(event)">
+                                <i class="fa-solid fa-tag icono-categoria" style="color: {{ categoria.color }};"></i>  
+                                {{ categoria.nombre }}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>   
+        </div>        
+    </div>    
+    <!-- JavaScript -->
+    {% block scripts %}
+    <script src="{% static 'js/crear_habito.js' %}"></script>
+    {% endblock %}
  {% endblock %}
 
