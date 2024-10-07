@@ -44,6 +44,7 @@ class Habito(models.Model):
     id_habito = models.AutoField(primary_key=True)  # AUTO_INCREMENT y PRIMARY KEY
     id_usuario = models.ForeignKey('Usuario', on_delete=models.CASCADE)  # ForeignKey a Usuario
     id_objetivo = models.ForeignKey('Objetivo', on_delete=models.CASCADE)  # ForeignKey a Objetivo
+    id_categoria = models.ForeignKey('Categoria', on_delete=models.CASCADE)  # ForeignKey a Categoria
     nombre = models.CharField(max_length=64)  # VARCHAR(64)
     descripcion = models.CharField(max_length=255, null=True, blank=True)  # VARCHAR(255) con DEFAULT NULL
     frecuencia = models.PositiveIntegerField(default=1)  # INT con DEFAULT 1
@@ -66,17 +67,6 @@ class Categoria(models.Model):
     def __str__(self):
         return self.nombre
     
-# TABLA CATEGORIZADO
-class Categorizado(models.Model):
-    id_habito = models.ForeignKey('Habito', on_delete=models.CASCADE)  # Clave foránea a Habito
-    id_categoria = models.ForeignKey('Categoria', on_delete=models.CASCADE)  # Clave foránea a Categoria
-
-    class Meta:
-        unique_together = ('id_habito', 'id_categoria')  # Llave primaria compuesta
-
-    def __str__(self):
-        return f"Hábito: {self.id_habito} - Categoría: {self.id_categoria}"
-
 # TABLA REGISTRO
 class Registro(models.Model):
     id_registro = models.AutoField(primary_key=True)  # AUTO_INCREMENT y PRIMARY KEY

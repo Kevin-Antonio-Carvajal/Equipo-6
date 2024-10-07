@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Categoria, Usuario, Categorizado, Habito, Objetivo, Dia
+from .models import Categoria, Usuario, Habito, Objetivo, Dia
 
 # Configuracion para mostrar los modelos en el panel de administracion
 class CategoriaAdmin(admin.ModelAdmin):
@@ -26,7 +26,6 @@ class HabitoAdmin(admin.ModelAdmin):
 # Agregamos al panel de administracion
 admin.site.register(Categoria, CategoriaAdmin)
 admin.site.register(Usuario, UsuarioAdmin)
-admin.site.register(Categorizado)
 admin.site.register(Habito, HabitoAdmin)
 admin.site.register(Objetivo)
 admin.site.register(Dia)

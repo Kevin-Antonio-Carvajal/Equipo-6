@@ -27,23 +27,6 @@
             <div class="form-container">
                 <h4>Detalles del nuevo hábito</h4>                
                 <form action="{% url 'guardar_habito' %}" method="GET">
-                    <!-- Categorias -->
-                     <div id="categorias">
-                        <div id="btn-agregar-categoria" data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar categoria" onclick="openModalSeleccionaCategoria(event)">
-                            <i class="fa-solid fa-tag icono-categoria"></i>
-                            <i class="fa-solid fa-plus"></i>
-                        </div>
-                     </div>                    
-                     <!-- <div class="categorias">
-                        <div class="categoria">
-                            <i class="fa-solid fa-tag icono-categoria"></i>
-                            Salud
-                        </div>
-                        <div class="categoria">
-                            <i class="fa-solid fa-tag icono-categoria"></i>
-                            Salud
-                        </div>
-                     </div> -->
                     <!-- Nombre -->
                     <label for="nombre">Nombre</label>                    
                     <p><input type="text" name="nombre" placeholder="Ej: Hacer ejercicio"></p>
@@ -53,6 +36,15 @@
                     <!-- Frecuencia -->
                     <label for="frecuencia">Frecuencia (veces al día)</label>
                     <p><input type="number" name="frecuencia" min="1" value="1" required></p>
+                    <!-- Categoria -->
+                    <label for="categorias">Categoria</label>
+                    <p>
+                        <select id="categorias" name="categoria">
+                            {% for categoria in categorias %}
+                            <option value="{{ categoria.id_categoria }}">{{ categoria.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </p>
                     <!-- Objetivo -->
                     <label for="objetivo">Objetivo</label>   
                     <div id="objetivos">
@@ -63,6 +55,8 @@
                         <input type="radio" id="mensual" name="frecuencia" value="mensual">
                         <label for="mensual">Mensual</label><br>                                              
                     </div>
+                    <!-- Dias -->                     	
+                    <!-- Aqui se pone el input para seleccionar los dias -->
                     <div id="recordar-container">
                         <span>Activar recordatorios</span>
                         <!-- Aqui se carga el switch de notificaciones con JavaScript -->
@@ -73,30 +67,7 @@
                     </div>
                     <input id="btn-enviar" type="submit" value="Crear">
                 </form> 
-            </div> 
-            <!-- Modal de seleccion de categorias -->
-            <div id="modal-selecciona-categoria" class="modal-propio">
-                <div id="modal-content">                    
-                    <div id="seleccion-categorias-container" class="modal-content">
-                        <div class="close-container" onclick="closeModalSeleccionaCategoria(event)">
-                            <div class="close-btn">
-                                <i class="fa-solid fa-x"></i>
-                            </div>
-                        </div>
-                        <div class="seleccion-categorias-title">
-                            <h4>Selecciona una categoria</h4>
-                        </div>
-                        <div id="categorias-disponibles">
-                            {% for categoria in categorias %}
-                            <div id="categoria-{{ categoria.id_categoria }}" class="categoria" style="cursor: pointer;" onclick="clickEtiquetaDisponible(event)">
-                                <i class="fa-solid fa-tag icono-categoria" style="color: {{ categoria.color }};"></i>  
-                                {{ categoria.nombre }}
-                            </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-            </div>   
+            </div>  
         </div>        
     </div>    
     <!-- JavaScript -->

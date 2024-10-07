@@ -79,6 +79,13 @@ FOREIGN KEY (`id_objetivo`)
 REFERENCES `Objetivo`(`id_objetivo`)
 ON DELETE CASCADE
 ON UPDATE CASCADE;
+-- Llave foranea Categoria --
+ALTER TABLE `Categoria`
+ADD CONSTRAINT `fk_HabitoCategoria`
+FOREIGN KEY (`id_categoria`)
+REFERENCES `Categoria`(`id_categoria`)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
 
 --
 -- TABLA CATEGORIA
