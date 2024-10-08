@@ -9,4 +9,10 @@
  <!-- Contenido -->
   {% block content %}
     <h1>{{ titulo }}</h1>
+    <!-- Mensaje de exito -->
+    {% if mensaje_exitoso%}
+    <div class="alert alert-success" role="alert">
+      {{ mensaje_exitoso }}
+    </div>
+    {% endif %}
   {% endblock %}

@@ -1,5 +1,5 @@
-from django.shortcuts import render, HttpResponse
-from .models import Categoria
+from django.shortcuts import render, HttpResponse, redirect
+from .models import Categoria, Objetivo, Habito, Dia
 from mainapp.context_processors import get_usuario
 
 def index(request):
@@ -20,9 +20,56 @@ def crear_habito(request):
 
 def guardar_habito(request):
 
-    informacion = None
+    # Obtenemos el usuario que inicio sesion
+    usuario_contexto = get_usuario(request)
+    usuario = usuario_contexto.get('usuario')
 
-    if request.method == 'GET':
-        pass
-
-    return HttpResponse(f"<h2>Habito guardado: {informacion}</h2>")
+    if request.method == 'POST':
+        id_usuario = usuario['id']
+        nombre = request.POST['nombre']
+        # Como el campo descripcion es opcional, en caso de que no se encuentre regresa ''
+        descripcion = request.POST.get('descripcion', '')
+        frecuencia = int(request.POST['frecuencia'])
+        id_categoria = request.POST['categoria']
+        objetivo = request.POST['objetivo']
+        id_objetivo = Objetivo.objects.get(tipo=objetivo).id_objetivo
+        notificar = 'notificar' in request.POST 
+        # Creamos el habito
+        habito = Habito.objects.create(
+            id_usuario_id=id_usuario,
+            id_objetivo_id=id_objetivo,
+            id_categoria_id=id_categoria,
+            nombre=nombre,
+            descripcion=descripcion,
+            frecuencia=frecuencia,
+            notificar=notificar
+        )
+        # Guardamos los días si el objetivo es semanal o mensual
+        if objetivo == 'semanal':
+            dias_semana = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo']                        
+            for indice, dia in enumerate(dias_semana, start=1):
+                # Si el checbox no fue seleccionado entonces no estara en el POST
+                if dia in request.POST:
+                    # Creamos el dia
+                    Dia.objects.create(
+                        id_objetivo_id=id_objetivo,
+                        dia=indice
+                    )
+        elif objetivo == 'mensual':
+            # Seleccionamos los dias del mes que el usuario eligio
+            for indice in range(1,32):
+                if f"dia-{indice}" in request.POST:
+                    Dia.objects.create(
+                        id_objetivo_id=id_objetivo,
+                        dia=indice
+                    )
+        else:
+            # El objetivo es diario
+            pass
+        # Mensajes de éxito
+        contexto = {
+            'mensaje_exitoso': 'Habito creado exitosamente'
+        }
+        # Redirigimos a la pantalla principal
+        return render(request, 'mainapp/index.html', contexto)
+    
