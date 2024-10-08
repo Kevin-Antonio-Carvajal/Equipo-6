@@ -42,7 +42,7 @@ def guardar_habito(request):
         # Creamos el habito
         habito = Habito.objects.create(
             id_usuario_id=id_usuario,
-            id_objetivo_id=objetivo.id_objetivo,
+            id_objetivo=objetivo,
             id_categoria_id=id_categoria,
             nombre=nombre,
             descripcion=descripcion,
@@ -50,22 +50,22 @@ def guardar_habito(request):
             notificar=notificar
         )
         # Guardamos los días si el objetivo es semanal o mensual
-        if objetivo == 'semanal':
+        if tipo_objetivo == 'semanal':
             dias_semana = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo']                        
             for indice, dia in enumerate(dias_semana, start=1):
                 # Si el checbox no fue seleccionado entonces no estara en el POST
                 if dia in request.POST:
                     # Creamos el dia
                     Dia.objects.create(
-                        id_objetivo_id=objetivo.id_objetivo,
+                        id_objetivo=objetivo,
                         dia=indice
                     )
-        elif objetivo == 'mensual':
+        elif tipo_objetivo == 'mensual':
             # Seleccionamos los dias del mes que el usuario eligio
             for indice in range(1,32):
                 if f"dia-{indice}" in request.POST:
                     Dia.objects.create(
-                        id_objetivo_id=objetivo.id_objetivo,
+                        id_objetivo=objetivo,
                         dia=indice
                     )
         else:
