@@ -10,6 +10,10 @@ const start = () => {
     });
 }
 
+const clickcito = (event) => {
+    console.log('Hola mundo!')
+}
+
 // Al ejecutarse el componente
 start()
 

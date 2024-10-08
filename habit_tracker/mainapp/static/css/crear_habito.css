@@ -128,3 +128,62 @@
 .close-btn{
     cursor: pointer;
 }
+
+/* Calendario */
+
+#calendario-mes {
+    display: grid;
+    width: 200px;
+    grid-template-columns: repeat(7, 1fr); /* 7 columnas de igual tamaño */
+    gap: 4px; /* Espacio entre los elementos */
+    margin: 12px;
+    background-color: #FFF;
+    padding: 12px;
+    border-radius: 4px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.tile {    
+    height: 20px;
+    width: 20px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column; /* Alinea el checkbox y el texto verticalmente */
+}
+
+.tile input[type="checkbox"] {
+    -webkit-appearance: none;
+    position: relative;
+    height: 100%;
+    width: 100%;
+    background-color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.tile input[type="checkbox"]:hover {
+    transform: scale(1.08);
+}
+
+.tile input[type="checkbox"]:checked {
+    background-color: #42A5F5;
+}
+
+.tile input[type="checkbox"]:checked ~ label {
+    color: white;
+}
+
+
+/* Asegúrate de que el label esté centrado dentro de la tile */
+.tile label {    
+    font-size: small !important;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none; /* Evita que el label interfiera con el checkbox */
+    font-size: 18px;
+}
