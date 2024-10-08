@@ -31,13 +31,18 @@ def guardar_habito(request):
         descripcion = request.POST.get('descripcion', '')
         frecuencia = int(request.POST['frecuencia'])
         id_categoria = request.POST['categoria']
-        objetivo = request.POST['objetivo']
-        id_objetivo = Objetivo.objects.get(tipo=objetivo).id_objetivo
+        tipo_objetivo = request.POST['objetivo']
         notificar = 'notificar' in request.POST 
+
+        # Creamos un nuevo objetivo vinculado al hábito
+        objetivo = Objetivo.objects.create(
+            tipo=tipo_objetivo
+        )
+        
         # Creamos el habito
         habito = Habito.objects.create(
             id_usuario_id=id_usuario,
-            id_objetivo_id=id_objetivo,
+            id_objetivo_id=objetivo.id_objetivo,
             id_categoria_id=id_categoria,
             nombre=nombre,
             descripcion=descripcion,
@@ -52,7 +57,7 @@ def guardar_habito(request):
                 if dia in request.POST:
                     # Creamos el dia
                     Dia.objects.create(
-                        id_objetivo_id=id_objetivo,
+                        id_objetivo_id=objetivo.id_objetivo,
                         dia=indice
                     )
         elif objetivo == 'mensual':
@@ -60,7 +65,7 @@ def guardar_habito(request):
             for indice in range(1,32):
                 if f"dia-{indice}" in request.POST:
                     Dia.objects.create(
-                        id_objetivo_id=id_objetivo,
+                        id_objetivo_id=objetivo.id_objetivo,
                         dia=indice
                     )
         else:
