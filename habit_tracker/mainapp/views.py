@@ -101,3 +101,9 @@ def editar_habito(request, id_habito):
         'habito': habito,
         'categorias': categorias,
     })
+
+# Nueva vista para eliminar un hábito
+def eliminar_habito(request, id_habito):
+    habito = get_object_or_404(Habito, id_habito=id_habito)
+    habito.delete()  # Elimina el hábito de la base de datos
+    return redirect('lista_habitos')  # Redirige de nuevo a la lista de hábitos

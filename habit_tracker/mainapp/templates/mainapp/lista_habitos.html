@@ -1,18 +1,31 @@
 {% extends 'layouts/layout.html' %}
+{% load static %} <!-- Cargar etiquetas estáticas aquí -->
+
 {% block title %}Lista de Hábitos{% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/lista_habitos.css' %}"> <!-- Enlace al archivo CSS -->
+
 <div class="container mt-4">
     <h2>Hábitos Registrados</h2>
-    <ul>
+    <div class="habits-container">
         {% for habito in habitos %}
-        <li>
-            {{ habito.nombre }} - {{ habito.descripcion }}
-            <a href="{% url 'editar_habito' habito.id_habito %}" class="btn btn-primary btn-sm">Editar</a>
-        </li>
+        <div class="habit-card">
+            <div class="habit-header">
+                <div class="habit-title">{{ habito.nombre }}</div>
+                <div class="habit-progress">{{ habito.frecuencia }} vez/veces al día</div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-bar-fill" style="width: 50%;"></div> <!-- Ajusta el ancho según el progreso real -->
+            </div>
+            <div class="habit-actions">
+                <a href="{% url 'editar_habito' habito.id_habito %}" class="action-button edit-button">✎</a>
+                <a href="{% url 'eliminar_habito' habito.id_habito %}" class="action-button delete-button" onclick="return confirm('¿Estás seguro de que deseas eliminar este hábito?');">🗑</a>
+            </div>
+        </div>
         {% empty %}
-        <li>No hay hábitos registrados.</li>
+        <p>No hay hábitos registrados.</p>
         {% endfor %}
-    </ul>
+    </div>
 </div>
 {% endblock %}

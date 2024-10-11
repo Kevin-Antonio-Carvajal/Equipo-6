@@ -44,7 +44,18 @@
                     </div>
                 </div>
 
-                <button id="btn-guardar" type="submit" class="btn btn-success mt-3">Guardar Cambios</button>
+                <div class="button-container">
+                    <button id="btn-guardar" type="submit" class="btn btn-save">
+                        <span class="btn-icon">💾</span>
+                        Guardar Cambios
+                    </button>
+                    <a href="{% url 'eliminar_habito' habito.id_habito %}" class="btn btn-delete" onclick="return confirm('¿Estás seguro de que deseas eliminar este hábito?');">
+                        <span class="btn-icon">🗑</span>
+                        Eliminar
+                    </a>
+                </div>
+                
+                
             </form>
         </div>                 
     </div>        

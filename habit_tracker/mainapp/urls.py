@@ -30,5 +30,16 @@ urlpatterns = [
     path(
         'editar_habito/<int:id_habito>/', 
         views.editar_habito, 
-        name='editar_habito'),
+        name='editar_habito'
+        ),
+    path(
+        'eliminar_habito/<int:id_habito>/', 
+        views.eliminar_habito, 
+        name='eliminar_habito'
+        ), 
+    path(
+        'eliminar_habito/<int:id_habito>/', 
+        views.eliminar_habito, 
+        name='eliminar_habito'
+        ),
 ]
