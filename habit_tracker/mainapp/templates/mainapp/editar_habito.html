@@ -1,0 +1,52 @@
+{% extends '../layouts/layout.html' %}
+{% load static %}
+
+{% block title %}Editar Hábito{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/editar_habito.css' %}">
+<div class="main-container">
+    <div class="crear-habito-container">
+        <div class="subtitle">
+            <i class="fa-solid fa-arrow-left back" onclick="window.history.back()"></i>
+            <h4>Editar Hábito</h4>
+            <i class="fa-solid fa-x tache"></i>
+        </div>
+        <div class="form-container">
+            <h4>Detalles del hábito</h4>                
+            <form id="formulario-habito" action="{% url 'editar_habito' habito.id_habito %}" method="POST">
+                {% csrf_token %}
+                <label for="nombre">Nombre</label>                    
+                <p><input type="text" name="nombre" value="{{ habito.nombre }}" required></p>
+
+                <label for="descripcion">Descripción (opcional)</label>
+                <p><textarea name="descripcion">{{ habito.descripcion }}</textarea></p>
+
+                <label for="frecuencia">Frecuencia (veces al día)</label>
+                <p><input type="number" name="frecuencia" min="1" value="{{ habito.frecuencia }}" required></p>
+
+                <label for="categoria">Categoría</label>
+                <p>
+                    <select id="categoria" name="categoria">
+                        {% for categoria in categorias %}
+                        <option value="{{ categoria.id_categoria }}" {% if categoria == habito.id_categoria %}selected{% endif %}>
+                            {{ categoria.nombre }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </p>
+
+                <div id="recordar-container">
+                    <span>Activar recordatorios</span>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" name="notificar" style="width: 50px; height: 24px;" {% if habito.notificar %}checked{% endif %}>
+                        <label class="form-check-label" for="notificar"></label>
+                    </div>
+                </div>
+
+                <button id="btn-guardar" type="submit" class="btn btn-success mt-3">Guardar Cambios</button>
+            </form>
+        </div>                 
+    </div>        
+</div>
+{% endblock %}

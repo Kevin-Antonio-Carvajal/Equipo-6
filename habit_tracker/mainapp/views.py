@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponse, redirect
+from django.shortcuts import render, HttpResponse, get_object_or_404, redirect
 from .models import Categoria, Objetivo, Habito, Dia
 from mainapp.context_processors import get_usuario
 
@@ -77,4 +77,27 @@ def guardar_habito(request):
         }
         # Redirigimos a la pantalla principal
         return render(request, 'mainapp/index.html', contexto)
-    
+
+def lista_habitos(request):
+    habitos = Habito.objects.all()  # Recupera todos los hábitos de la base de datos
+    return render(request, 'mainapp/lista_habitos.html', {'habitos': habitos})
+
+# Vista para editar un hábito específico
+def editar_habito(request, id_habito):
+    habito = get_object_or_404(Habito, id_habito=id_habito)
+    categorias = Categoria.objects.all()  # Obtén todas las categorías para el formulario
+
+    if request.method == 'POST':
+        habito.nombre = request.POST['nombre']
+        habito.descripcion = request.POST.get('descripcion', '')
+        habito.frecuencia = request.POST['frecuencia']
+        habito.id_categoria_id = request.POST['categoria']
+        habito.notificar = 'notificar' in request.POST
+        habito.save()  # Guarda los cambios en la base de datos
+
+        return redirect('lista_habitos')  # Redirige a la lista de hábitos después de editar
+
+    return render(request, 'mainapp/editar_habito.html', {
+        'habito': habito,
+        'categorias': categorias,
+    })

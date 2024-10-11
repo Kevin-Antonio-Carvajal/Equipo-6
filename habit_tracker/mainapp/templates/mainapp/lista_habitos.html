@@ -1,0 +1,18 @@
+{% extends 'layouts/layout.html' %}
+{% block title %}Lista de Hábitos{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Hábitos Registrados</h2>
+    <ul>
+        {% for habito in habitos %}
+        <li>
+            {{ habito.nombre }} - {{ habito.descripcion }}
+            <a href="{% url 'editar_habito' habito.id_habito %}" class="btn btn-primary btn-sm">Editar</a>
+        </li>
+        {% empty %}
+        <li>No hay hábitos registrados.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
