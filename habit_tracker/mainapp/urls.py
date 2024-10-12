@@ -13,6 +13,11 @@ urlpatterns = [
         name='index'
     ),
     path(
+        'diario/', 
+        views.diario, 
+        name='diario'
+    ), 
+    path(
         'crear_habito/',
         views.crear_habito,
         name='crear_habito'
@@ -42,4 +47,14 @@ urlpatterns = [
         views.eliminar_habito, 
         name='eliminar_habito'
         ),
+    path(
+        'completar_habito/<int:id_habito>/',
+        views.completar_habito,
+        name='completar_habito'        
+    ),
+    path(
+        'descompletar_habito/<int:id_habito>/',
+        views.descompletar_habito,
+        name='descompletar_habito'
+    )
 ]

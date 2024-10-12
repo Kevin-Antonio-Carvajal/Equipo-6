@@ -1,6 +1,8 @@
 <!-- Agregamos el Layout -->
 {% extends '../layouts/layout.html' %}
 
+{% load static %}
+
 <!-- Titulo -->
  {% block title %}
     {{ titulo }}
@@ -8,11 +10,23 @@
 
  <!-- Contenido -->
   {% block content %}
-    <h1>{{ titulo }}</h1>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+    <!-- Presentacion -->
+    <section id="presentacion">                   
+      <h1>
+        Mejores Habitos,<br>
+        Mejor Vida
+      </h1>
+      <p>
+        Aproveche el poder de nuestra aplicación personalizada de seguimiento de hábitos para optimizar sus rutinas diarias y alcanzar sus objetivos.
+      </p>
+      <p><a href="#">Probar HabitTrack</a></p>
+      <img src="static/images/devices.png" alt="">
+    </section>
     <!-- Mensaje de exito -->
     {% if mensaje_exitoso%}
     <div class="alert alert-success" role="alert">
       {{ mensaje_exitoso }}
-    </div>
+    </div>    
     {% endif %}
   {% endblock %}
