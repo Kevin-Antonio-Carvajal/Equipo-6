@@ -21,5 +21,25 @@ urlpatterns = [
         'guardar_habito/',
         views.guardar_habito,
         name='guardar_habito'
-    )
+    ),
+    path(
+        'lista_habitos/', 
+        views.lista_habitos, 
+        name='lista_habitos'
+    ), 
+    path(
+        'editar_habito/<int:id_habito>/', 
+        views.editar_habito, 
+        name='editar_habito'
+        ),
+    path(
+        'eliminar_habito/<int:id_habito>/', 
+        views.eliminar_habito, 
+        name='eliminar_habito'
+        ), 
+    path(
+        'eliminar_habito/<int:id_habito>/', 
+        views.eliminar_habito, 
+        name='eliminar_habito'
+        ),
 ]
