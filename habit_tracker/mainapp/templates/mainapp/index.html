@@ -9,8 +9,15 @@
  {% endblock %}
 
  <!-- Contenido -->
-  {% block content %}
+  {% block content %}    
+    <!-- Estilos -->
     <link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+    <!-- Mostramos mensajes -->
+    {% if messages %}
+      {% for message in messages %}
+        <h2 style="color: blue;">{{ message }}</h2>
+      {% endfor %}
+    {% endif %}
     <!-- Presentacion -->
     <section id="presentacion">                   
       <h1>
@@ -22,11 +29,5 @@
       </p>
       <p><a href="#">Probar HabitTrack</a></p>
       <img src="static/images/devices.png" alt="">
-    </section>
-    <!-- Mensaje de exito -->
-    {% if mensaje_exitoso%}
-    <div class="alert alert-success" role="alert">
-      {{ mensaje_exitoso }}
-    </div>    
-    {% endif %}
+    </section> 
   {% endblock %}

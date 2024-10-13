@@ -4,11 +4,19 @@
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+<!-- Mostrar mensajes -->
+{% if messages %}
+{% for message in messages %}
+    <div class="message">
+        {{ message }}
+    </div>
+{% endfor %}
+{% endif %}
 <div class="auth-container">
     <div class="auth-card">
         <h2>Registrarse</h2>
         <p>Crea una cuenta para el seguimiento de tus hábitos</p>
-        <form method="post">
+        <form action="{% url 'register' %}" method="post">
             {% csrf_token %}
             {{ form.as_p }}
             <button type="submit" class="btn btn-primary btn-block">Registrarse</button>

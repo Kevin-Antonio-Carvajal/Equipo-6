@@ -1,13 +1,15 @@
 
 # Contexto que regresa el usuario que inicio la sesion
 def get_usuario(request):
-
-    usuario = {
-        'id': 1,
-        'nombre': 'Luis Sebastian',
-        'correo': 'sebastian_luis@ciencias.unam.mx',
-        'username': 'sebsDev'
-    }
+    usuario = None
+    # Verificamos si hay información del usuario en la sesión
+    if 'usuario_id' in request.session:
+        usuario = {
+            'id': request.session.get('usuario_id'),
+            'nombre': request.session.get('usuario_nombre'),
+            'correo': request.session.get('usuario_correo'),
+            'username': request.session.get('usuario_username'),
+        }
 
     return {
         'usuario': usuario

@@ -4,7 +4,13 @@
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/auth.css' %}">
-<div class="auth-container">
+<!-- Mostamos los mensajes -->
+{% if messages %}
+{%for message in messages%}
+    <h1>{{ message }}</h1>
+{% endfor %}
+{% endif %}
+<div class="auth-container">    
     <div class="auth-card">
         <h2>Iniciar Sesión</h2>
         <p>Ingresa a tu cuenta de seguimiento de hábitos</p>

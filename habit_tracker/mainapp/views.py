@@ -1,7 +1,7 @@
 from datetime import date
 from django.utils import timezone
 from django.shortcuts import render, HttpResponse, get_object_or_404, redirect
-from .models import Categoria, Objetivo, Habito, Dia, Registro
+from .models import Categoria, Objetivo, Habito, Dia, Registro, Usuario
 from mainapp.context_processors import get_usuario
 from django.db.models import Q
 from django.contrib.auth.forms import UserCreationForm
@@ -9,6 +9,8 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib import messages
+from mainapp.forms import FormRegister
+from mainapp.CryptoUtils import cipher, sha256, decipher, validate
 
 def index(request):
 
@@ -56,6 +58,15 @@ def diario(request):
 
 def crear_habito(request):
 
+    # Obtenemos el usuario que inicio sesion
+    usuario_contexto = get_usuario(request)
+    usuario = usuario_contexto.get('usuario')
+
+    if usuario is None:
+        # Si no hay un usuario en la sesión, redirigir al inicio de sesión
+        messages.error(request, 'Debes iniciar sesión para crear un hábito.')
+        return redirect('login')
+
     # Obtenemos todas las categorias
     categorias = Categoria.objects.all()
 
@@ -70,7 +81,12 @@ def guardar_habito(request):
     usuario_contexto = get_usuario(request)
     usuario = usuario_contexto.get('usuario')
 
-    if request.method == 'POST':
+    if usuario is None:
+        # Si no hay un usuario en la sesión, redirigir al inicio de sesión
+        messages.error(request, 'Debes iniciar sesión para crear un hábito.')
+        return redirect('login')
+
+    if request.method == 'POST':        
         id_usuario = usuario['id']
         nombre = request.POST['nombre']
         # Como el campo descripcion es opcional, en caso de que no se encuentre regresa ''
@@ -118,14 +134,25 @@ def guardar_habito(request):
             # El objetivo es diario
             pass
         # Mensajes de éxito
-        contexto = {
-            'mensaje_exitoso': 'Habito creado exitosamente'
-        }
+        messages.success(request, 'Habito creado exitosamente')
         # Redirigimos a la pantalla principal
-        return render(request, 'mainapp/index.html', contexto)
+        return redirect('diario')
+    else:
+        return redirect('index')
 
 def lista_habitos(request):
-    habitos = Habito.objects.all()  # Recupera todos los hábitos de la base de datos
+
+    # Obtenemos el usuario que inicio sesion
+    usuario_contexto = get_usuario(request)
+    usuario = usuario_contexto.get('usuario')
+
+    if usuario is None:
+        # Si no hay un usuario en la sesión, redirigir al inicio de sesión
+        messages.error(request, 'Debes iniciar sesión para ver todos tus habitos')
+        return redirect('login')
+    
+
+    habitos = Habito.objects.filter(id_usuario_id=usuario['id'])  # Recupera todos los hábitos de la base de datos
     return render(request, 'mainapp/lista_habitos.html', {'habitos': habitos})
 
 # Vista para editar un hábito específico
@@ -232,35 +259,65 @@ class CustomUserCreationForm(UserCreationForm):
 
 # Esta función maneja el registro de nuevos usuarios, mostrando el formulario de registro y procesando la creación del usuario.
 def register(request):
+    
     if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Registro exitoso. Por favor inicia sesión.')
-            return redirect('login')  # Redirigir al login después del registro sin loguear al usuario automáticamente
+        formulario = FormRegister(request.POST)
+        if formulario.is_valid():
+            data_form = formulario.cleaned_data
+            nombre = data_form.get('nombre')
+            correo = data_form.get('correo')
+            username = data_form.get('username')            
+            password = data_form.get('password')
+            # Varificamos si el correo no ha sido registrado
+            existe_usuario = Usuario.objects.filter(correo=correo).exists()
+            if existe_usuario:
+                messages.error(request, f'Este correo electrónico ya está registrado. Si ya tienes una cuenta, por favor inicia sesión.')
+                return redirect('register')
+            else:
+                # Registramos el usuario
+                hashed_password = sha256(cipher(password)).hexdigest()
+                usuario = Usuario.objects.create(
+                    nombre=nombre,
+                    correo=correo,
+                    username=username,
+                    password=hashed_password
+                )
+                messages.success(request, 'Te has registrado correctamente')
+                return redirect('index')
     else:
-        form = CustomUserCreationForm()
-    return render(request, 'mainapp/register.html', {'form': form})
+        return render(request, 'mainapp/register.html', {'form': FormRegister()})
 
 # Esta función maneja el inicio de sesión de los usuarios, autenticándolos y redirigiéndolos si las credenciales son correctas.
 def login_view(request):
     if request.method == 'POST':
-        username = request.POST['username']
+        correo = request.POST['username']
         password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            auth_login(request, user)
-            messages.success(request, f'Bienvenido, {user.username}!')
-            return redirect('index')  # Redirigir a la página principal después del login
+        exite_usuario = Usuario.objects.filter(correo=correo).exists()
+        if not exite_usuario:
+            messages.error(request, 'Correo incorrecto')
+            return redirect('login')
         else:
-            messages.error(request, 'Nombre de usuario o contraseña incorrectos.')
-    return render(request, 'mainapp/login.html')
+            usuario = Usuario.objects.get(correo=correo)
+            if validate(password,usuario.password):
+                # Guardamos la informacion del usuario en la sesion
+                request.session['usuario_id'] = usuario.id_usuario
+                request.session['usuario_nombre'] = usuario.nombre
+                request.session['usuario_correo'] = usuario.correo
+                request.session['usuario_username'] = usuario.username
+                messages.success(request, f'Bienvenido, {usuario.nombre}!')
+                return redirect('index')
+            else:
+                messages.error(request, 'Contraseña incorrecta')
+                return redirect('login')
+    else:
+        return render(request, 'mainapp/login.html')
+    
 
 # Esta función maneja el cierre de sesión del usuario, redirigiéndolo al formulario de login.
 def logout_view(request):
     auth_logout(request)
     messages.success(request, 'Has cerrado sesión exitosamente.')
-    return redirect('login')  # Redirigir al login después del logout   
+    return redirect('login')  # Redirigir al login después del logout
 
     
     
