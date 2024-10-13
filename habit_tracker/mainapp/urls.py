@@ -56,5 +56,19 @@ urlpatterns = [
         'descompletar_habito/<int:id_habito>/',
         views.descompletar_habito,
         name='descompletar_habito'
-    )
+    ),
+    #Rutas del login y register, aun no se si es que aqui esta el error
+    path(
+        'login/', 
+        views.login_view,
+        name='login'
+    ),
+    path(
+        'register/', 
+        views.register, 
+        name='register'
+    ), 
+    path('logout/',
+        views.logout_view, 
+        name='logout')
 ]

@@ -4,6 +4,11 @@ from django.shortcuts import render, HttpResponse, get_object_or_404, redirect
 from .models import Categoria, Objetivo, Habito, Dia, Registro
 from mainapp.context_processors import get_usuario
 from django.db.models import Q
+from django.contrib.auth.forms import UserCreationForm
+from django import forms
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
+from django.contrib import messages
 
 def index(request):
 
@@ -215,8 +220,47 @@ def descompletar_habito(request, id_habito):
         else:
             return HttpResponse('No existe el registro')
     else:
-        return HttpResponse('No existe el habito')    
-    
+        return HttpResponse('No existe el habito')
+
+# Esta clase define un formulario de creación de usuario personalizado, extendiendo el formulario por defecto de Django.
+class CustomUserCreationForm(UserCreationForm):
+    email = forms.EmailField(required=True, help_text='Required. Enter a valid email address.')
+
+    class Meta:
+        model = User
+        fields = ("username", "email", "password1", "password2")
+
+# Esta función maneja el registro de nuevos usuarios, mostrando el formulario de registro y procesando la creación del usuario.
+def register(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Registro exitoso. Por favor inicia sesión.')
+            return redirect('login')  # Redirigir al login después del registro sin loguear al usuario automáticamente
+    else:
+        form = CustomUserCreationForm()
+    return render(request, 'mainapp/register.html', {'form': form})
+
+# Esta función maneja el inicio de sesión de los usuarios, autenticándolos y redirigiéndolos si las credenciales son correctas.
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            auth_login(request, user)
+            messages.success(request, f'Bienvenido, {user.username}!')
+            return redirect('index')  # Redirigir a la página principal después del login
+        else:
+            messages.error(request, 'Nombre de usuario o contraseña incorrectos.')
+    return render(request, 'mainapp/login.html')
+
+# Esta función maneja el cierre de sesión del usuario, redirigiéndolo al formulario de login.
+def logout_view(request):
+    auth_logout(request)
+    messages.success(request, 'Has cerrado sesión exitosamente.')
+    return redirect('login')  # Redirigir al login después del logout   
 
     
     
