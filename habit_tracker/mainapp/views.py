@@ -20,16 +20,17 @@ def index(request):
 
 def diario(request):
 
-    # Obtenemos el usuario que inició sesión
+    # Obtenemos el usuario que inicio sesion
     usuario_contexto = get_usuario(request)
     usuario = usuario_contexto.get('usuario')
 
-    # Verificamos si hay un usuario autenticado
-    if usuario:
-        # Obtenemos los hábitos del usuario que se deben cumplir hoy
-        habitos_hoy = obtener_habitos_hoy(usuario)
-    else:
-        habitos_hoy = []
+    if usuario is None:
+        # Si no hay un usuario en la sesión, redirigir al inicio de sesión
+        messages.error(request, 'Debes iniciar sesión para crear un hábito.')
+        return redirect('login')
+
+    # Obtenemos los hábitos del usuario que se deben cumplir hoy
+    habitos_hoy = obtener_habitos_hoy(usuario)
 
     # Obtenemos los registros del día de hoy en una sola consulta
     hoy = date.today()
@@ -315,9 +316,12 @@ def login_view(request):
 
 # Esta función maneja el cierre de sesión del usuario, redirigiéndolo al formulario de login.
 def logout_view(request):
-    auth_logout(request)
+    # Limpiamos toda la información almacenada en la sesión
+    request.session.flush()
+    # Mostramos un mensaje de éxito al cerrar sesión
     messages.success(request, 'Has cerrado sesión exitosamente.')
-    return redirect('login')  # Redirigir al login después del logout
+    # Redirigimos al usuario a la página de inicio de sesión
+    return redirect('login')
 
     
     
