@@ -90,11 +90,11 @@ class Recordatorio(models.Model):
 
 # TABLA NOTIFICACION
 class Notificacion(models.Model):
-    id_notificacion = models.AutoField(primary_key=True)  # AUTO_INCREMENT y PRIMARY KEY
+    id_notificacion = models.AutoField(primary_key=True)  # AUTO_INCREMENT y PRIMARY KEY        
     id_habito = models.ForeignKey('Habito', on_delete=models.CASCADE)  # ForeignKey a Habito
     titulo = models.CharField(max_length=64)  # VARCHAR(64)
     descripcion = models.CharField(max_length=255, null=True, blank=True)  # VARCHAR(255)
     estatus = models.BooleanField(default=False)  # BOOLEAN con DEFAULT FALSE
-
+    mensaje_motivacional = models.CharField(max_length=255, null=True, blank=True)  # Mensaje opcional
     def __str__(self):
-        return self.titulo
+        return f"{self.titulo}: {self.mensaje_motivacional or 'Mantente motivado!'}"

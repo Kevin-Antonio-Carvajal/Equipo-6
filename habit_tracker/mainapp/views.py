@@ -12,6 +12,28 @@ from django.contrib.auth import authenticate, login as auth_login, logout as aut
 from django.contrib import messages
 from mainapp.forms import FormRegister
 from mainapp.CryptoUtils import cipher, sha256, decipher, validate
+from django.db import models
+from .models import Notificacion
+
+def obtener_habitos_no_completados(usuario):
+    hoy = timezone.now().date()
+    habitos_hoy = obtener_habitos_hoy(usuario)
+    
+    # Obtener registros de hábitos completados hoy
+    habitos_completados_hoy = Registro.objects.filter(
+        id_habito__in=habitos_hoy, 
+        fecha_creacion__date=hoy
+    ).values_list('id_habito', flat=True)
+    
+    # Filtrar los hábitos de hoy que no están completados
+    habitos_no_completados = habitos_hoy.exclude(id_habito__in=habitos_completados_hoy)
+    
+    return habitos_no_completados
+
+class NotificacionGlobal(models.Model):
+    mensaje = models.CharField(max_length=255)
+    fecha_envio = models.DateTimeField(auto_now_add=True)
+    activo = models.BooleanField(default=True)  # Permitir activar o desactivar notificaciones
 
 def index(request):
 
@@ -20,40 +42,50 @@ def index(request):
     })
 
 def diario(request):
-
-    # Obtenemos el usuario que inicio sesion
     usuario_contexto = get_usuario(request)
     usuario = usuario_contexto.get('usuario')
 
     if usuario is None:
-        # Si no hay un usuario en la sesión, redirigir al inicio de sesión
-        messages.error(request, 'Debes iniciar sesión para crear un hábito.')
+        messages.error(request, 'Debes iniciar sesión para ver tu diario.')
         return redirect('login')
 
-    # Obtenemos los hábitos del usuario que se deben cumplir hoy
     habitos_hoy = obtener_habitos_hoy(usuario)
-
-    # Obtenemos los registros del día de hoy en una sola consulta
-    hoy = date.today()
-    registros_hoy = Registro.objects.filter(id_habito__in=habitos_hoy, fecha_creacion__date=hoy)
+    hoy = timezone.now().date()
+    registros_hoy = Registro.objects.filter(
+        id_habito__in=habitos_hoy,
+        fecha_creacion__date=hoy
+    ).values_list('id_habito', flat=True)
 
     habitos = []
+    notificaciones = []
+    
     for habito in habitos_hoy:
-        # Verificamos si el hábito tiene un registro creado hoy
-        completado_hoy = registros_hoy.filter(id_habito=habito).exists()
-
+        completado = habito.id_habito in registros_hoy
         habitos.append({
             'id_habito': habito.id_habito,
-            'objetivo': habito.id_objetivo,  # Ya es un objeto, no hace falta otra consulta
-            'categoria': habito.id_categoria,  # Ya es un objeto, no hace falta otra consulta
+            'categoria': habito.id_categoria,
             'nombre': habito.nombre,
             'frecuencia': habito.frecuencia,
-            'completado': completado_hoy  # True si el hábito está completado hoy
+            'completado': completado
         })
-
+        
+        if not completado:
+            notificacion, created = Notificacion.objects.get_or_create(
+                id_habito=habito,
+                estatus=False,
+                defaults={
+                    'titulo': f"Recordatorio para {habito.nombre}",
+                    'descripcion': f"No has completado el hábito '{habito.nombre}' hoy.",
+                    'mensaje_motivacional': "¡No te rindas, continúa con tu rutina!"
+                }
+            )
+            notificaciones.append(notificacion)
+    
     contexto = {
         'titulo': 'Mantente al día',
-        'habitos': habitos
+        'habitos': habitos,
+        'notificaciones': notificaciones,
+        'notificaciones_no_leidas': len(notificaciones),
     }
 
     return render(request, 'mainapp/diario.html', contexto)
@@ -160,22 +192,42 @@ def lista_habitos(request):
 # Vista para editar un hábito específico
 def editar_habito(request, id_habito):
     habito = get_object_or_404(Habito, id_habito=id_habito)
-    categorias = Categoria.objects.all()  # Obtén todas las categorías para el formulario
-
+    categorias = Categoria.objects.all()
+    dias = Dia.objects.filter(id_objetivo=habito.id_objetivo)
+    
     if request.method == 'POST':
+        # Actualizar los campos del hábito
         habito.nombre = request.POST['nombre']
         habito.descripcion = request.POST.get('descripcion', '')
         habito.frecuencia = request.POST['frecuencia']
         habito.id_categoria_id = request.POST['categoria']
         habito.notificar = 'notificar' in request.POST
-        habito.save()  # Guarda los cambios en la base de datos
+        
+        # Actualizar el objetivo
+        habito.id_objetivo.tipo = request.POST['objetivo']
+        habito.id_objetivo.save()
 
-        return redirect('lista_habitos')  # Redirige a la lista de hábitos después de editar
-
+        # Eliminar los días existentes y añadir los nuevos si es necesario
+        Dia.objects.filter(id_objetivo=habito.id_objetivo).delete()
+        if habito.id_objetivo.tipo == 'semanal':
+            for i, dia in enumerate(['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo'], start=1):
+                if dia in request.POST:
+                    Dia.objects.create(id_objetivo=habito.id_objetivo, dia=i)
+        elif habito.id_objetivo.tipo == 'mensual':
+            for i in range(1, 32):
+                if f"dia-{i}" in request.POST:
+                    Dia.objects.create(id_objetivo=habito.id_objetivo, dia=i)
+        
+        habito.save()
+        return redirect('lista_habitos')
+    
     return render(request, 'mainapp/editar_habito.html', {
         'habito': habito,
         'categorias': categorias,
+        'dias': dias,
+        'titulo': 'Editar Hábito'
     })
+
 
 # Nueva vista para eliminar un hábito
 def eliminar_habito(request, id_habito):
@@ -222,6 +274,7 @@ def completar_habito(request, id_habito):
                 fecha_creacion__date=timezone.now().date()  # Solo la parte de la fecha
             ).first()
             if registro:
+                Notificacion.objects.filter(id_habito=habito, estatus=False).delete()
                 return JsonResponse({
                     'message': 'Esta habito ya habia sido completado',
                     'compleado': True
@@ -256,6 +309,16 @@ def descompletar_habito(request, id_habito):
             ).first()
             if registro:
                 registro.delete()
+                # Creamos la notificacion
+                Notificacion.objects.update_or_create(
+                    id_habito=habito,
+                    estatus=False,
+                    defaults={
+                        'titulo': f"Recordatorio para {habito.nombre}",
+                        'descripcion': f"No has completado el hábito '{habito.nombre}' hoy.",
+                        'mensaje_motivacional': "¡No te rindas, continúa con tu rutina!"
+                    }
+                )
                 return JsonResponse({
                     'message': 'Habito descompletado',
                     'descompletado': True
@@ -273,14 +336,6 @@ def descompletar_habito(request, id_habito):
         return JsonResponse({
             'error': 'Peticion invalida'
         },status=400)
-
-# Esta clase define un formulario de creación de usuario personalizado, extendiendo el formulario por defecto de Django.
-class CustomUserCreationForm(UserCreationForm):
-    email = forms.EmailField(required=True, help_text='Required. Enter a valid email address.')
-
-    class Meta:
-        model = User
-        fields = ("username", "email", "password1", "password2")
 
 # Esta función maneja el registro de nuevos usuarios, mostrando el formulario de registro y procesando la creación del usuario.
 def register(request):

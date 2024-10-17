@@ -22,6 +22,7 @@ class HabitoAdmin(admin.ModelAdmin):
         'fecha_creacion'
     )
 
+# Configuracion para mostrar los modelos en el panel de administracion
 class RegistroAdmin(admin.ModelAdmin):
     readonly_fields = (
         'id_registro',
@@ -29,11 +30,15 @@ class RegistroAdmin(admin.ModelAdmin):
         'fecha_creacion'
     )
 
+# Configuracion para mostrar los modelos en el panel de administracion
 class NotificacionAdmin(admin.ModelAdmin):
     readonly_fields = (
         'id_notificacion',
         'id_habito'
     )
+    list_display = ('id_notificacion', 'id_habito', 'titulo', 'estatus')
+    list_filter = ('estatus',)
+    search_fields = ('titulo', 'descripcion')
 
 # Agregamos al panel de administracion
 admin.site.register(Categoria, CategoriaAdmin)
