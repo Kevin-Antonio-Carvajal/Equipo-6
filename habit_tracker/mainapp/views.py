@@ -1,5 +1,6 @@
 from datetime import date
 from django.utils import timezone
+from django.http import JsonResponse
 from django.shortcuts import render, HttpResponse, get_object_or_404, redirect
 from .models import Categoria, Objetivo, Habito, Dia, Registro, Usuario
 from mainapp.context_processors import get_usuario
@@ -210,45 +211,68 @@ def obtener_habitos_hoy(usuario):
     return habitos_hoy
 
 def completar_habito(request, id_habito):
-    # Obtener el hábito correspondiente
-    habito = Habito.objects.get(id_habito=id_habito)
-
-    # Crear un nuevo registro relacionado con el hábito y la fecha actual (si no existe ya uno)
-    if habito:
-        # Verificamos si ya existe un registro relacionado al dia de hoy
-        registro = Registro.objects.filter(
-            id_habito=habito,
-            fecha_creacion__date=timezone.now().date()  # Solo la parte de la fecha
-        ).first()
-        if registro:
-            return HttpResponse('Ya existe un registro')
-        else:
-            Registro.objects.create(
-                id_habito=habito
-            )
-            return redirect('diario')
+    # Verificamos que el metodo sea POST
+    if request.method == 'POST':
+        try:
+            # Obtener el hábito correspondiente
+            habito = Habito.objects.get(id_habito=id_habito)
+            # Verificamos si ya existe un registro relacionado al dia de hoy
+            registro = Registro.objects.filter(
+                id_habito=habito,
+                fecha_creacion__date=timezone.now().date()  # Solo la parte de la fecha
+            ).first()
+            if registro:
+                return JsonResponse({
+                    'message': 'Esta habito ya habia sido completado',
+                    'compleado': True
+                }, status=200)
+            else:                
+                Registro.objects.create(
+                    id_habito=habito
+                )
+                return JsonResponse({
+                    'message': 'Habito completado',
+                    'completado': True
+                }, status=200)
+        except Habito.DoesNotExist:
+            return JsonResponse({
+                'error': 'No existe el habito'
+            }, status=404)
     else:
-        return HttpResponse('No existe el habito')    
-
+        return JsonResponse({
+            'error': 'Peticion invalida'
+        }, status=400)
 
 def descompletar_habito(request, id_habito):
-    # Obtener el hábito correspondiente
-    habito = Habito.objects.get(id_habito=id_habito)
-
-    if habito:
-        # Eliminar el registro del día actual relacionado con el hábito
-        registro = Registro.objects.filter(
-            id_habito=habito,
-            fecha_creacion__date=timezone.now().date()  # Solo la parte de la fecha
-        ).first()
-
-        if registro:
-            registro.delete()
-            return redirect('diario')
-        else:
-            return HttpResponse('No existe el registro')
+    # Verificamos que el metodo sea POST
+    if request.method == 'POST':
+        try:
+            # Obtener el hábito correspondiente
+            habito = Habito.objects.get(id_habito=id_habito)
+            # Obtenemos el registro relacionado a este habito
+            registro = Registro.objects.filter(
+                id_habito=habito,
+                fecha_creacion__date=timezone.now().date()  # Solo la parte de la fecha
+            ).first()
+            if registro:
+                registro.delete()
+                return JsonResponse({
+                    'message': 'Habito descompletado',
+                    'descompletado': True
+                },status=200)
+            else:
+                return JsonResponse({
+                    'message': 'Este habito no habia sido completado',
+                    'descompletado': True
+                },status=200)
+        except Habito.DoesNotExist:
+            return JsonResponse({
+                'error': 'No existe el habito'
+            },status=404)
     else:
-        return HttpResponse('No existe el habito')
+        return JsonResponse({
+            'error': 'Peticion invalida'
+        },status=400)
 
 # Esta clase define un formulario de creación de usuario personalizado, extendiendo el formulario por defecto de Django.
 class CustomUserCreationForm(UserCreationForm):

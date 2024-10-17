@@ -50,10 +50,10 @@
                                 </div>
                             </div>                     
                         </div>
-                        <!-- Completar -->                  
-                        <div class="completar {% if habito.completado %}active{% endif %}" onclick="completarToggle(event, {{ habito.id_habito}})">
+                        <!-- Completar -->   
+                        <div class="completar {% if habito.completado %}active{% endif %}" onclick="toggle(event, {{ habito.id_habito}})">
                             <i class="fa-regular fa-circle-check"></i>
-                        </div>
+                        </div>                        
                     </div>
                     {% endfor %}   
                 {% else %}
@@ -62,6 +62,9 @@
             </div>
         </div>        
     </div>
+    <!-- Acciones URLS -->
+    <div id="completar-accion" style="display: none;" data-url="{% url 'completar_habito' id_habito=0 %}"></div>
+    <div id="descompletar-accion" style="display: none;" data-url="{% url 'descompletar_habito' id_habito=0 %}"></div>
     <!-- JavaScript -->
     {% block scripts %}
         <script src="{% static 'js/diario.js' %}"></script>
