@@ -38,8 +38,9 @@ const toggle = (event, id_habito) => {
  * @param {*} elemento elemento que disparo el evento
  */
 const completar_habito = (id_habito, elemento) => {
-    const csrftoken = getCookie('csrftoken')
-    const url = document.getElementById('completar-accion').getAttribute('data-url').replace('0',id_habito)
+    const csrftoken = getCookie('csrftoken');
+    const url = document.getElementById('completar-accion').getAttribute('data-url').replace('0', id_habito);
+
     fetch(url, {
         method: 'POST',
         headers: {
@@ -48,22 +49,17 @@ const completar_habito = (id_habito, elemento) => {
         },
         credentials: 'same-origin'
     })
-    .then(response => {
-        if(!response.ok){
-            throw new Error('Error en la respuesta del servidor')
-        }
-        return response.json()
-    })
+    .then(response => response.json())
     .then(data => {
-        if (data.completado){
-            elemento.classList.add('active')
-            console.log(data.message)
-        } else {
-            console.log('Error: ', data.error)
+        if (data.completado) {
+            elemento.classList.add('active');
+            actualizarNotificaciones(); // Llama a la actualización de notificaciones
         }
     })
-    .catch(error => console.log('Error al completar el habito: ', error))
-}
+    .catch(error => console.error('Error al completar el hábito:', error));
+};
+
+
 
 /**
  * Descompleta un habito
@@ -71,8 +67,9 @@ const completar_habito = (id_habito, elemento) => {
  * @param {*} elemento elemento que disparo el evento
  */
 const descompletar_habito = (id_habito, elemento) => {
-    const csrftoken = getCookie('csrftoken')
-    const url = document.getElementById('descompletar-accion').getAttribute('data-url').replace('0',id_habito)
+    const csrftoken = getCookie('csrftoken');
+    const url = document.getElementById('descompletar-accion').getAttribute('data-url').replace('0', id_habito);
+
     fetch(url, {
         method: 'POST',
         headers: {
@@ -82,21 +79,21 @@ const descompletar_habito = (id_habito, elemento) => {
         credentials: 'same-origin'
     })
     .then(response => {
-        if(!response.ok){
-            throw new Error('Error en la respuesta del servidor')
+        if (!response.ok) {
+            throw new Error('Error en la respuesta del servidor');
         }
-        return response.json()
+        return response.json();
     })
     .then(data => {
-        if (data.descompletado){
-            elemento.classList.remove('active')
-            console.log(data.message)
-        } else {
-            console.log('Error: ', data.error)
+        if (data.descompletado) {
+            elemento.classList.remove('active');
+            actualizarNotificaciones(); // Llama a la actualización de notificaciones
+            console.log(data.message);
         }
     })
-    .catch(error => console.log('Error al descompletar el habito: ', error))
-}
+    .catch(error => console.error('Error al descompletar el hábito:', error));
+};
+
 
 /**
  * Funcion que regresa una Cookie
@@ -135,3 +132,38 @@ const backPage = () => {
     // Regresamos a la pagina anterior
     window.history.back();
 }
+
+// Llama a esta función cada vez que se complete o descomplete un hábito
+function actualizarNotificaciones() {
+    fetch('/obtener_notificaciones/')
+        .then(response => response.json())
+        .then(data => {
+            const notificationContent = document.getElementById('notification-content');
+            notificationContent.innerHTML = ''; // Limpia las notificaciones actuales
+
+            // Si hay notificaciones pendientes, mostrar
+            if (data.notificaciones.length > 0) {
+                data.notificaciones.forEach(notificacion => {
+                    const notificationItem = document.createElement('div');
+                    notificationItem.classList.add('notification-item');
+                    notificationItem.innerHTML = `<strong>${notificacion.titulo}</strong><br>${notificacion.descripcion}<br><em>${notificacion.mensaje_motivacional}</em>`;
+                    notificationContent.appendChild(notificationItem);
+                });
+            } else if (data.mensaje_felicitacion) {
+                // Si no hay notificaciones, mostrar mensaje de felicitación
+                const felicitationItem = document.createElement('div');
+                felicitationItem.classList.add('notification-item');
+                felicitationItem.innerText = data.mensaje_felicitacion;
+                notificationContent.appendChild(felicitationItem);
+            }
+
+            // Actualiza el contador de notificaciones
+            const badge = document.querySelector('.badge');
+            badge.innerText = data.notificaciones_no_leidas;
+        })
+        .catch(error => console.error('Error al obtener notificaciones:', error));
+}
+
+
+
+

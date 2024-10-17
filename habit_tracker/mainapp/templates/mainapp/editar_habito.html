@@ -36,6 +36,20 @@
                     </select>
                 </p>
 
+                <label for="objetivo">Objetivo</label>
+                <div id="objetivos">
+                    <input type="radio" id="diario" name="objetivo" value="diario" {% if habito.id_objetivo.tipo == 'diario' %}checked{% endif %} onclick="eliminaDias()">
+                    <label for="diario">Diario</label><br>
+                    <input type="radio" id="semanal" name="objetivo" value="semanal" {% if habito.id_objetivo.tipo == 'semanal' %}checked{% endif %} onclick="agregaDiasSemana()">
+                    <label for="semanal">Semanal</label><br>
+                    <input type="radio" id="mensual" name="objetivo" value="mensual" {% if habito.id_objetivo.tipo == 'mensual' %}checked{% endif %} onclick="agregaDiasMes()">
+                    <label for="mensual">Mensual</label><br>
+                </div>
+
+                <div id="objetivo-dias-contenedor">
+                    <!-- Los días se cargarán aquí dependiendo del objetivo -->
+                </div>
+
                 <div id="recordar-container">
                     <span>Activar recordatorios</span>
                     <div class="form-check form-switch">
@@ -46,18 +60,18 @@
 
                 <div class="button-container">
                     <button id="btn-guardar" type="submit" class="btn btn-save">
-                        <span class="btn-icon">💾</span>
                         Guardar Cambios
                     </button>
                     <a href="{% url 'eliminar_habito' habito.id_habito %}" class="btn btn-delete" onclick="return confirm('¿Estás seguro de que deseas eliminar este hábito?');">
-                        <span class="btn-icon">🗑</span>
                         Eliminar
                     </a>
                 </div>
-                
                 
             </form>
         </div>                 
     </div>        
 </div>
+
+<!-- Incluir el script de crear_habito.js para gestionar la selección de días -->
+<script src="{% static 'js/crear_habito.js' %}"></script>
 {% endblock %}

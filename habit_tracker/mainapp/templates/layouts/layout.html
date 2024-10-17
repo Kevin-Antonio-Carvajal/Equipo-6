@@ -23,55 +23,57 @@
 <body>
   <!-- Navbar -->
   <div class="container">
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="{% url 'inicio' %}">
-        <img class="logo" src="{% static 'images/logo.png' %}">
-        <span class="brand">HabitTrack</span>
-    </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'diario' %}">Diario</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'lista_habitos' %}">Todos los Hábitos</a>
-        </li>  
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'crear_habito' %}">Crear Hábito</a>
-        </li>                  
-      </ul>
-      <!-- Icono de notificaciones con cuadro emergente -->
-      <div class="ml-auto notification-icon">
-          <i class="fa fa-bell" onclick="toggleNotificationPopup()"></i> 
-          <span class="badge badge-info">
-              {% if notificaciones_no_leidas %}
-                  {{ notificaciones_no_leidas }}
-              {% else %}
-                  0
-              {% endif %}
-          </span>
-          <!-- Cuadro emergente para notificaciones -->
-          <div id="notification-popup" class="notification-popup">
-              {% if notificaciones %}
-                  {% for notificacion in notificaciones %}
-                      <div class="notification-item">
-                          <strong>{{ notificacion.titulo }}</strong><br>
-                          {{ notificacion.descripcion }}<br>
-                          <em>{{ notificacion.mensaje_motivacional }}</em>
-                      </div>
-                  {% endfor %}
-              {% else %}
-                  <div class="notification-item">
-                      ¡Felicitaciones! Has completado todos tus hábitos hoy.
-                  </div>
-              {% endif %}
-          </div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="{% url 'inicio' %}">
+          <img class="logo" src="{% static 'images/logo.png' %}">
+          <span class="brand">HabitTrack</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'diario' %}">Diario</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'lista_habitos' %}">Todos los Hábitos</a>
+          </li>  
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'crear_habito' %}">Crear Hábito</a>
+          </li>                  
+        </ul>
+        <!-- Icono de notificaciones con cuadro emergente -->
+        <div class="ml-auto notification-icon">
+            <i class="fa fa-bell" onclick="toggleNotificationPopup()"></i> 
+            <span class="badge badge-info" id="notification-count">
+                {% if notificaciones_no_leidas %}
+                    {{ notificaciones_no_leidas }}
+                {% else %}
+                    0
+                {% endif %}
+            </span>
+            <!-- Cuadro emergente para notificaciones -->
+            <div id="notification-popup" class="notification-popup">
+                <div id="notification-content">
+                    {% if notificaciones %}
+                        {% for notificacion in notificaciones %}
+                            <div class="notification-item">
+                                <strong>{{ notificacion.titulo }}</strong><br>
+                                {{ notificacion.descripcion }}<br>
+                                <em>{{ notificacion.mensaje_motivacional }}</em>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="notification-item">
+                            ¡Felicitaciones! Has completado todos tus hábitos hoy.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
       </div>
-    </div>
-  </nav>
+    </nav>
 
     <!-- Contenedor principal -->
     <div class="content-wrapper">

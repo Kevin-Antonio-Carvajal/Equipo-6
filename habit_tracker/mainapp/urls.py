@@ -70,5 +70,11 @@ urlpatterns = [
     ), 
     path('logout/',
         views.logout_view, 
-        name='logout')
+        name='logout'),
+
+    path(
+        'obtener_notificaciones/',
+        views.obtener_notificaciones,
+        name='obtener_notificaciones'
+    )
 ]
