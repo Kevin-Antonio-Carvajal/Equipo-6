@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Categoria, Usuario, Habito, Objetivo, Dia, Registro
+from .models import Categoria, Usuario, Habito, Objetivo, Dia, Registro, Notificacion
 
 # Configuracion para mostrar los modelos en el panel de administracion
 class CategoriaAdmin(admin.ModelAdmin):
@@ -29,6 +29,11 @@ class RegistroAdmin(admin.ModelAdmin):
         'fecha_creacion'
     )
 
+class NotificacionAdmin(admin.ModelAdmin):
+    readonly_fields = (
+        'id_notificacion',
+        'id_habito'
+    )
 
 # Agregamos al panel de administracion
 admin.site.register(Categoria, CategoriaAdmin)
@@ -37,4 +42,6 @@ admin.site.register(Habito, HabitoAdmin)
 admin.site.register(Registro, RegistroAdmin)
 admin.site.register(Objetivo)
 admin.site.register(Dia)
+admin.site.register(Notificacion, NotificacionAdmin)
+
 

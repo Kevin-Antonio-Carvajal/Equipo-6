@@ -88,3 +88,13 @@ class Recordatorio(models.Model):
     def __str__(self):
         return f"Recordatorio para {self.id_habito} a las {self.hora}"
 
+# TABLA NOTIFICACION
+class Notificacion(models.Model):
+    id_notificacion = models.AutoField(primary_key=True)  # AUTO_INCREMENT y PRIMARY KEY
+    id_habito = models.ForeignKey('Habito', on_delete=models.CASCADE)  # ForeignKey a Habito
+    titulo = models.CharField(max_length=64)  # VARCHAR(64)
+    descripcion = models.CharField(max_length=255, null=True, blank=True)  # VARCHAR(255)
+    estatus = models.BooleanField(default=False)  # BOOLEAN con DEFAULT FALSE
+
+    def __str__(self):
+        return self.titulo
