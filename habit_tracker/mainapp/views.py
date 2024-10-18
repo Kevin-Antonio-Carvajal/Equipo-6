@@ -74,7 +74,7 @@ def diario(request):
                 id_habito=habito,
                 estatus=False,
                 defaults={
-                    'titulo': f"Recordatorio para {habito.nombre}",
+                    'titulo': f"Recuerda que no has completado el habito '{habito.nombre}' hoy.",
                     'descripcion': f"No has completado el hábito '{habito.nombre}' hoy.",
                     'mensaje_motivacional': "¡No te rindas, continúa con tu rutina!"
                 }

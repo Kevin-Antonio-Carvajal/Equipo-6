@@ -16,7 +16,7 @@
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="{% static 'css/layout.css' %}">
     <!-- Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800&display=swap" rel="stylesheet">
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -44,33 +44,35 @@
           </li>                  
         </ul>
         <!-- Icono de notificaciones con cuadro emergente -->
-        <div class="ml-auto notification-icon">
-            <i class="fa fa-bell" onclick="toggleNotificationPopup()"></i> 
-            <span class="badge badge-info" id="notification-count">
+        <div class="notification-icon">
+          <div class="notification-bell">
+            <i class="fa fa-bell" onclick="toggleNotificationPopup()"></i>
+            <span class="notification-count badge badge-info" id="notification-count">
                 {% if notificaciones_no_leidas %}
                     {{ notificaciones_no_leidas }}
                 {% else %}
                     0
                 {% endif %}
             </span>
-            <!-- Cuadro emergente para notificaciones -->
-            <div id="notification-popup" class="notification-popup">
-                <div id="notification-content">
-                    {% if notificaciones %}
-                        {% for notificacion in notificaciones %}
-                            <div class="notification-item">
-                                <strong>{{ notificacion.titulo }}</strong><br>
-                                {{ notificacion.descripcion }}<br>
-                                <em>{{ notificacion.mensaje_motivacional }}</em>
-                            </div>
-                        {% endfor %}
-                    {% else %}
-                        <div class="notification-item">
-                            ¡Felicitaciones! Has completado todos tus hábitos hoy.
-                        </div>
-                    {% endif %}
-                </div>
+          </div>
+          <!-- Cuadro emergente para notificaciones -->
+          <div id="notification-popup" class="notification-popup">
+            <div id="notification-content">
+              {% if notificaciones %}
+                  {% for notificacion in notificaciones %}
+                      <div class="notification-item">
+                          <div class="notification-title">{{ notificacion.titulo }}</div>
+                          <div class="notification-message">{{ notificacion.descripcion }}</div>
+                          <div class="notification-subtext">{{ notificacion.mensaje_motivacional }}</div>
+                      </div>
+                  {% endfor %}
+              {% else %}
+                  <div class="notification-item">
+                      <div class="notification-message">¡Felicitaciones! Has completado todos tus hábitos hoy.</div>
+                  </div>
+              {% endif %}
             </div>
+          </div>
         </div>
       </div>
     </nav>
@@ -97,6 +99,46 @@
             popup.style.display = 'none';
         }
     }
+
+    // Esta función se encarga de actualizar las notificaciones dinámicamente
+    function actualizarNotificaciones() {
+        fetch('/obtener_notificaciones/', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest' // Para indicar que es una solicitud AJAX
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Actualizamos el contenido de las notificaciones
+            const notificationContent = document.getElementById('notification-content');
+            const notificationCount = document.getElementById('notification-count');
+
+            // Limpiar el contenido previo
+            notificationContent.innerHTML = '';
+
+            if (data.notificaciones.length > 0) {
+                data.notificaciones.forEach(notificacion => {
+                    const notificacionDiv = document.createElement('div');
+                    notificacionDiv.classList.add('notification-item');
+                    notificacionDiv.innerHTML = `<strong>${notificacion.titulo}</strong><br>${notificacion.descripcion}<br><em>${notificacion.mensaje_motivacional}</em>`;
+                    notificationContent.appendChild(notificacionDiv);
+                });
+            } else {
+                notificationContent.innerHTML = '<div class="notification-item">¡Felicitaciones! Has completado todos tus hábitos hoy.</div>';
+            }
+
+            // Actualizar el contador de notificaciones no leídas
+            notificationCount.textContent = data.notificaciones_no_leidas || '0';
+        })
+        .catch(error => console.error('Error al obtener las notificaciones:', error));
+    }
+
+    // Llamar a la función de actualización cada vez que se carga la página
+    document.addEventListener('DOMContentLoaded', function() {
+        actualizarNotificaciones();
+    });
   </script>
 </body>
 </html>

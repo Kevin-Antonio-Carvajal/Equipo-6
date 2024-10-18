@@ -14,3 +14,17 @@ def get_usuario(request):
     return {
         'usuario': usuario
     }
+
+def obtener_notificaciones(request):
+    if request.user.is_authenticated:
+        usuario = request.user
+        notificaciones = Notificacion.objects.filter(id_habito__id_usuario=usuario, estatus=False)
+        notificaciones_no_leidas = notificaciones.count()
+    else:
+        notificaciones = []
+        notificaciones_no_leidas = 0
+
+    return {
+        'notificaciones': notificaciones,
+        'notificaciones_no_leidas': notificaciones_no_leidas,
+    }

@@ -63,6 +63,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'mainapp.context_processors.obtener_notificaciones', 
                 # Agregamos el contexto del usuario
                 'mainapp.context_processors.get_usuario'
             ],
