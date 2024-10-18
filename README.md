@@ -19,7 +19,7 @@ Repositorio oficial del Proyecto Intermedio "Aplicación de Seguimiento de Hábi
 
 # Ejecución:
 
-Activa el entorno virtual. Después ejecuta el siguiente comando para levantar el servidor:
+Activa el entorno virtual.
 
 ```bash
 python3 manage.py runserver
@@ -34,21 +34,3 @@ python3 manage.py runserver
 ## `/mainapp`
 
 Aplicacion principal, aqui se agregan las cosas en general como el inicio de sesion y la pagina principal.
-
-# Administradores
-
-Comando para crear super usuarios:
-
-```bash
-python3 manage.py createsuperuser
-```
-
-Ejemplo:
-
-**Usuario:** sebs
-
-**Correo:** sebastian_luis@ciencias.unam.mx
-
-# Ayuda
-En caso de que los estilos CSS no se vean reflejados en la página, presiona `Ctrl+F5`, esto sucede porque el navegador guarda los estilos css en caché.
-
