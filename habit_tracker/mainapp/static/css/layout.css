@@ -1,7 +1,111 @@
 body{
     font-family: "Poppins", sans-serif;
+    background-color: aliceblue;
+}
+
+.container {
+    max-width: 1280px !important;
 }
 
 .brand{
     font-weight: 600;
+}
+
+.navbar{
+    background-color: #fff !important;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px !important;
+}
+
+.notification-icon {
+    position: absolute; 
+    top: 17px; 
+    right: 20px; 
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.notification-icon .notification-bell i {
+    font-size: 18px;
+    color: #333;
+}
+
+.notification-icon .notification-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
+}
+
+.notification-icon .fa-bell {
+    font-size: 20px;
+    color: #333;
+}
+
+.notification-icon .badge {
+    font-size: 12px;
+    background-color: #17a2b8;
+    color: #fff;
+    border-radius: 50%;
+    padding: 3px 6px;
+    margin-left: 5px;
+    position: absolute;
+    top: -5px;
+    right: -10px;
+}
+
+.notification-popup {
+    position: absolute;
+    top: 50px;
+    right: 10px; 
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    width: 350px;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none;
+}
+
+.notification-item {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.notification-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #4f46e5;
+}
+
+.notification-message {
+    font-size: 16px;
+    font-weight: 500;
+    color: #111827;
+}
+
+.notification-subtext {
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 4px;
+}
+
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+.notification-item:hover {
+    background-color: #f7f7f7;
+    cursor: pointer;
 }

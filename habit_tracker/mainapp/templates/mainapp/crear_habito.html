@@ -1,0 +1,82 @@
+<!-- Agregamos el Layout -->
+{% extends '../layouts/layout.html' %}
+
+<!-- Cargamos el directorio Static-->
+{% load static %}
+
+<!-- Titulo -->
+{% block title %}
+    {{ titulo }}
+{% endblock %}
+
+<!-- Contenido -->
+ {% block content %}
+    <!-- Estilos -->
+    {% block styles %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/crear_habito.css' %}">
+    {% endblock %}
+    <div class="main-container">
+        <div class="crear-habito-container">            
+            <div class="subtitle">
+                <i class="fa-solid fa-arrow-left back" onclick="backPage()"></i>
+                <h4>{{ titulo }}</h4>
+                <!-- Lo colocamos para distribuir el titulo -->
+                <i class="fa-solid fa-x tache"></i>
+            </div>
+            <!-- Formulario -->
+            <div class="form-container">
+                <h4>Detalles del nuevo hábito</h4>                
+                <form id="formulario-habito" action="{% url 'guardar_habito' %}" method="POST">
+                    <!-- Token -->
+                    {% csrf_token %}
+                    <!-- Nombre -->
+                    <label for="nombre">Nombre</label>                    
+                    <p><input type="text" name="nombre" placeholder="Ej: Hacer ejercicio" required></p>
+                    <!-- Descripcion -->
+                    <label for="descripcion">Descripcion (opcional)</label>
+                    <p><textarea name="descripcion"></textarea></p>
+                    <!-- Frecuencia -->
+                    <label for="frecuencia">Frecuencia (veces al día)</label>
+                    <p><input type="number" name="frecuencia" min="1" value="1" required></p>
+                    <!-- Categoria -->
+                    <label for="categoria">Categoria</label>
+                    <p>
+                        <select id="categoria" name="categoria">
+                            {% for categoria in categorias %}
+                            <option value="{{ categoria.id_categoria }}">{{ categoria.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </p>
+                    <!-- Objetivo -->
+                    <label for="objetivo">Objetivo</label>   
+                    <div id="objetivos">
+                        <input type="radio" id="diario" name="objetivo" value="diario" checked onclick="eliminaDias()">
+                        <label for="diario">Diario</label><br>
+                        <input type="radio" id="semanal" name="objetivo" value="semanal" onclick="agregaDiasSemana()">
+                        <label for="semanal">Semanal</label><br>
+                        <input type="radio" id="mensual" name="objetivo" value="mensual" onclick="agregaDiasMes()">
+                        <label for="mensual">Mensual</label><br>                                              
+                    </div>
+                    <!-- Objetivo Dias-->	
+                    <div id="objetivo-dias-contenedor">
+                        <!-- Aqui se carga la seleccion de los dias desde js -->
+                    </div> 
+                    <div id="recordar-container">
+                        <span>Activar recordatorios</span>
+                        <!-- Aqui se carga el switch de notificaciones con JavaScript -->
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" name="notificar" style="width: 50px; height: 24px;">
+                            <label class="form-check-label" for="notificar"></label>
+                        </div>
+                    </div>
+                    <input id="btn-enviar" type="submit" value="Crear">
+                </form>
+            </div>                 
+        </div>        
+    </div>    
+    <!-- JavaScript -->
+    {% block scripts %}
+    <script src="{% static 'js/crear_habito.js' %}"></script>
+    {% endblock %}
+ {% endblock %}
+
