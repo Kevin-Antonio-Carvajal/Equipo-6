@@ -1,3 +1,4 @@
+from .models import Notificacion
 
 # Contexto que regresa el usuario que inicio la sesion
 def get_usuario(request):
@@ -16,8 +17,11 @@ def get_usuario(request):
     }
 
 def obtener_notificaciones(request):
-    if request.user.is_authenticated:
-        usuario = request.user
+    usuario_contexto = get_usuario(request)
+    usuario = usuario_contexto.get('usuario')
+
+    if usuario:
+        usuario = usuario['id']
         notificaciones = Notificacion.objects.filter(id_habito__id_usuario=usuario, estatus=False)
         notificaciones_no_leidas = notificaciones.count()
     else:
