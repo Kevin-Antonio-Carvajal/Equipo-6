@@ -1,7 +1,7 @@
 # Equipo-6
 
 # Aplicación de Seguimiento de Hábitos
-Repositorio oficial del Proyecto Intermedio "Aplicación de Seguimiento de Hábitos" para la materia de Diseño de Interfaces de Usuario de la Facultad de Ciencias de la UNAM del semestre 2025-1
+Repositorio oficial del Proyecto Intermedio "Aplicación de Seguimiento de Hábitos" para la materia de **Diseño de Interfaces de Usuario** de la **Facultad de Ciencias de la UNAM** en el semestre 2025-1.
 
 ## Profesores:
 
@@ -16,18 +16,41 @@ Repositorio oficial del Proyecto Intermedio "Aplicación de Seguimiento de Hábi
 - Morales Hidalgo Pedro
 - Mendiola Montes Victor Manuel
 - García Zárraga Angélica Lizbeth
+- Rodríguez García Ulises
 
 # Ejecución:
 
-Activa el entorno virtual. Después ejecuta el siguiente comando para levantar el servidor:
+1. **Creación y activación del entorno virtual**:
+   
+   Para ejecutar este proyecto, es necesario crear y activar un entorno virtual. Los pasos para hacerlo son los siguientes:
 
-```bash
-python3 manage.py runserver
-```
+   #### En macOS/Linux:
+   ```bash
+   python3 -m venv env
+   source env/bin/activate
+   ```
 
-# Dependencias:
+   #### En Windows:
+   ```bash
+   python3 -m venv env
+   .\env\Scripts\activate
+   ```
 
-    pip install Django
+2. **Instalación de dependencias**:
+   
+   Con el entorno virtual activado, instala todas las dependencias necesarias ejecutando el siguiente comando:
+
+   ```bash
+   pip3 install -r requirements.txt
+   ```
+
+3. **Ejecución del servidor de desarrollo**:
+   
+   Con las dependencias instaladas y el entorno virtual activo, puedes iniciar el servidor de desarrollo con el siguiente comando:
+
+   ```bash
+   python3 manage.py runserver
+   ```
 
 # Desarrollo
 
