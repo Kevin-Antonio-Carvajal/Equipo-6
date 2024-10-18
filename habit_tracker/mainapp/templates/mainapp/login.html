@@ -1,34 +1,53 @@
-<!-- mainapp/templates/mainapp/login.html -->
-{% extends 'layouts/layout.html' %}
 {% load static %}
-
-{% block content %}
-<link rel="stylesheet" href="{% static 'css/auth.css' %}">
-<!-- Mostamos los mensajes -->
-{% if messages %}
-{%for message in messages%}
-    <h1>{{ message }}</h1>
-{% endfor %}
-{% endif %}
-<div class="auth-container">    
-    <div class="auth-card">
-        <h2>Iniciar Sesión</h2>
-        <p>Ingresa a tu cuenta de seguimiento de hábitos</p>
-        <form method="post">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+</head>
+<body>
+    <div class="login-box">
+        <h1>Iniciar sesión</h1>
+        <p>"Hoy es un nuevo día para ser más fuerte que ayer."</p>
+        <form action="{% url 'login' %}" method="POST">
             {% csrf_token %}
-            <div class="form-group">
-                <label for="id_username">Correo electrónico</label>
-                <input type="text" name="username" required id="id_username" placeholder="tu@ejemplo.com" class="form-control">
+
+            <label for="email">Correo electrónico</label>
+            <input type="email" name= "username" id="ide_username" placeholder="Correo electrónico" required class="form-control">
+    
+            <label for="password">Contraseña</label>
+            <div class="password-wrapper">
+                <input type="password" name="password" id="id_password" placeholder="Contraseña" required class="form-control">
+                <span class="toggle-password">
+                    <!-- Ícono inicial de Font Awesome para el ojo abierto -->
+                    <i class="fas fa-eye"></i>
+                </span>
+            </div>          
+
+            {% if messages %}
+            <div class="messages-container">
+                {% for message in messages %}
+                    <p class="message {{ message.tags }}">{{ message }}</p>
+                {% endfor %}
             </div>
-            <div class="form-group">
-                <label for="id_password">Contraseña</label>
-                <input type="password" name="password" required id="id_password" placeholder="********" class="form-control">
-            </div>
-            <button type="submit" class="btn btn-primary btn-block">Iniciar Sesión</button>
+            {% endif %}
+
+            <button type="submit" class="login-button">Iniciar Sesión</button>
+    
+            <div class="after-login-button"></div>
+    
+            <!-- Línea separadora -->
+            <div class="separator"></div>
+    
+            <!-- Texto de no tienes cuenta -->
+            <p class="signup-text">¿No tienes cuenta? <a href="{% url 'register' %}">Regístrate</a></p>
         </form>
-        <div class="auth-links">
-            <a href="{% url 'register' %}">Registrarse</a>
-        </div>
-    </div>
-</div>
-{% endblock %}
+    </div>    
+
+    <script src="{% static 'js/togglePassword.js' %}"></script>
+</body>
+</html>
