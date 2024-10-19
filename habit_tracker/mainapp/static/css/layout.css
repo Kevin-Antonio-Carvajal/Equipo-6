@@ -16,6 +16,8 @@ body{
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px !important;
 }
 
+/* Notificacion */
+
 .notification-icon {
     position: absolute; 
     top: 17px; 

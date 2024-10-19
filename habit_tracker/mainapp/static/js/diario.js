@@ -59,8 +59,6 @@ const completar_habito = (id_habito, elemento) => {
     .catch(error => console.error('Error al completar el hábito:', error));
 };
 
-
-
 /**
  * Descompleta un habito
  * @param {*} id_habito id del habito
@@ -93,7 +91,6 @@ const descompletar_habito = (id_habito, elemento) => {
     })
     .catch(error => console.error('Error al descompletar el hábito:', error));
 };
-
 
 /**
  * Funcion que regresa una Cookie

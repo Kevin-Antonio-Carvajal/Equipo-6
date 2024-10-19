@@ -31,7 +31,9 @@
                 <i class="fa-solid fa-arrow-left back" onclick="backPage()"></i>
                 <h4>{{ titulo }}</h4>               
                 <!-- Lo colocamos para distribuir el titulo --> 
-                <i class="fa-solid fa-x tache"></i> 
+                <a href="{% url 'lista_habitos' %}" data-toggle="tooltip" data-placement="top" title="Todos los habitos">
+                    <img src="../../static/images/lista.png" alt="imagen de lista" class="img-thumbnail">
+                </a>
             </div>
             <!-- Habitos del hoy -->
             <div id="habitos">
