@@ -38,54 +38,59 @@
           </li> 
           <li class="nav-item">
             <a class="nav-link" href="{% url 'crear_habito' %}">Crear Hábito</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'logout' %}">Cerrar Sesion</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'register' %}">Registrarse</a>
-          </li>    
+          </li> 
         </ul>
-        <!-- Aquí agrupamos "Cerrar Sesion" y "Registrarse" y añadimos `ms-auto` -->
+        <!-- Elementos a la derecha -->
         <ul class="navbar-nav ms-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'logout' %}">Cerrar Sesión</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'register' %}">Registrarse</a>
-            </li>
-        </ul>
-        <!-- Icono de notificaciones con cuadro emergente -->
-        <div class="notification-icon" onclick="toggleNotificationPopup()">
-          <div class="notification-bell">
-            <i class="fa fa-bell"></i>
-            <span class="notification-count badge badge-info" id="notification-count">
-                {% if notificaciones_no_leidas %}
-                    {{ notificaciones_no_leidas }}
-                {% else %}
-                    0
-                {% endif %}
-            </span>
-          </div>
-          <!-- Cuadro emergente para notificaciones -->
-          <div id="notification-popup" class="notification-popup">
-            <div id="notification-content">
-              {% if notificaciones %}
-                  {% for notificacion in notificaciones %}
-                      <div class="notification-item">
-                          <div class="notification-title">{{ notificacion.titulo }}</div>
-                          <div class="notification-message">{{ notificacion.descripcion }}</div>
-                          <div class="notification-subtext">{{ notificacion.mensaje_motivacional }}</div>
-                      </div>
-                  {% endfor %}
-              {% else %}
-                  <div class="notification-item">
-                      <div class="notification-message">¡Felicitaciones! Has completado todos tus hábitos hoy.</div>
+            {% if usuario %}
+              <li class="nav-item">
+                  <a class="nav-link" href="{% url 'logout' %}">Cerrar Sesión</a>
+              </li>
+              <li>
+                <!-- Icono de notificaciones con cuadro emergente -->
+                <div class="notification-icon" onclick="toggleNotificationPopup()">
+                  <div class="notification-bell">
+                    <i class="fa fa-bell"></i>
+                    <span class="notification-count badge badge-info" id="notification-count">
+                        {% if notificaciones_no_leidas %}
+                            {{ notificaciones_no_leidas }}
+                        {% else %}
+                            0
+                        {% endif %}
+                    </span>
                   </div>
-              {% endif %}
-            </div>
-          </div>
-        </div>
+                  <!-- Cuadro emergente para notificaciones -->
+                  <div id="notification-popup" class="notification-popup">
+                    <div id="notification-content">
+                      {% if notificaciones %}
+                          {% for notificacion in notificaciones %}
+                              <div class="notification-item">
+                                  <div class="notification-title">{{ notificacion.titulo }}</div>
+                                  <div class="notification-message">{{ notificacion.descripcion }}</div>
+                                  <div class="notification-subtext">{{ notificacion.mensaje_motivacional }}</div>
+                              </div>
+                          {% endfor %}
+                      {% else %}
+                          <div class="notification-item">
+                              <div class="notification-message">¡Felicitaciones! Has completado todos tus hábitos hoy.</div>
+                          </div>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <div class="perfil-icon">
+                <i class="fa-solid fa-user"></i>
+              </div>
+            {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'login' %}">Iniciar sesion</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'register' %}">Registrarse</a>
+              </li>
+            {% endif %}            
+        </ul>
       </div>
     </nav>
 
