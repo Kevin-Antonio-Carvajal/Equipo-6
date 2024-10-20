@@ -472,10 +472,15 @@ def progreso(request):
             dia = registro.fecha_creacion.day
             progreso_acumulativo[dia] += 1
 
+    # Categorias relacionadas a los habitos del usuario
+    categorias = Categoria.objects.filter(habito__id_usuario=usuario).distinct()
+
     contexto = {
         'titulo': 'Mi Progreso',
         'dias': list(progreso_acumulativo.keys()),
-        'progreso': list(progreso_acumulativo.values())
+        'progreso': list(progreso_acumulativo.values()),
+        'habitos': habitos,
+        'categorias': categorias
     }
 
     return render(request, 'mainapp/progreso.html', contexto)
