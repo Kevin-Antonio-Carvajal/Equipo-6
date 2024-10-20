@@ -3,8 +3,17 @@ body{
     background-color: aliceblue;
 }
 
+
 .container {
     max-width: 1280px !important;
+    height: 100vh;
+    position: relative;
+    padding: 0px;
+}
+
+.logo {
+    width: 80px;
+    padding: 0px 12px;
 }
 
 .brand{
@@ -124,4 +133,45 @@ body{
     background-color: #ffffff;
     border-radius: 50%;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Footer */
+.footer {
+    left: 0px;
+    bottom: 0px;
+    position: absolute;
+    width: 100%;
+    background-color: #fff;
+    color: #fff;
+    font-size: 14px;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.footer-section {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.footer-section svg {
+    fill: #007bff;
+    width: 80px;
+    height: 80px;
+}
+
+/* Footer Bottom */
+.footer-bottom {
+    background-color: #252525;
+    padding: 20px;
+    text-align: center;
+    border-top: 1px solid #444;
+}
+
+.footer-bottom p {
+    margin: 0;
+    color: #bbb;
 }

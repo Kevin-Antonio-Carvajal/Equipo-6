@@ -42,6 +42,7 @@
     overflow: hidden;
     margin-bottom: 12px;
     background-color: #FFF;    
+    position: relative;
 }
 
 .habito .informacion {
@@ -92,6 +93,23 @@
 .habito .active i {
     color: #FFF;
 }
+
+/* Estadisticas */
+
+.icono-estadisticas {
+    position: absolute;
+    cursor: pointer;
+    font-size: 24px; /* Tamaño del icono */
+    color: #2196F3;
+    right: 62px;
+    align-self: center;
+}
+
+.icono-estadisticas:hover {
+    color: #4A789D; /* Cambia el color cuando el mouse está sobre el icono */
+}
+
+
 
 
 

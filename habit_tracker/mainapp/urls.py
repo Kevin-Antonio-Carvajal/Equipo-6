@@ -86,5 +86,10 @@ urlpatterns = [
         'progreso_habito/<int:id_habito>/',
         views.progreso_habito,
         name='progreso_habito'
+    ),
+    path(
+        'filtrar_progreso/<int:categoria>/<int:mes>/',
+        views.filtrar_progreso,
+        name='filtrar_progreso'
     )
 ]

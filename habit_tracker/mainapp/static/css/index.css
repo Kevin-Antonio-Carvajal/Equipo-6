@@ -26,5 +26,31 @@ h1 {
     color: #fff;
 }
 
+#titulo {
+    color: #2196F3;
+}
 
+/* Grafica */
 
+#estadisticas-container{
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    padding: 32px;
+}
+
+#filtros {
+    display: flex;
+    justify-content: space-between;
+    font-size: small;
+    padding: 12px;
+}
+
+#filtros label {
+    margin-right: 6px;
+}
+
+#filtros span:last-child {
+    text-decoration: underline;
+    cursor: pointer;
+}

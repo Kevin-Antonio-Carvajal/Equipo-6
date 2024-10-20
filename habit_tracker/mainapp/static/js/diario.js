@@ -38,9 +38,8 @@ const toggle = (event, id_habito) => {
  * @param {*} elemento elemento que disparo el evento
  */
 const completar_habito = (id_habito, elemento) => {
-    const csrftoken = getCookie('csrftoken');
-    const url = document.getElementById('completar-accion').getAttribute('data-url').replace('0', id_habito);
-
+    const csrftoken = getCookie('csrftoken')
+    const url = `/completar_habito/${id_habito}/`
     fetch(url, {
         method: 'POST',
         headers: {
@@ -65,9 +64,8 @@ const completar_habito = (id_habito, elemento) => {
  * @param {*} elemento elemento que disparo el evento
  */
 const descompletar_habito = (id_habito, elemento) => {
-    const csrftoken = getCookie('csrftoken');
-    const url = document.getElementById('descompletar-accion').getAttribute('data-url').replace('0', id_habito);
-
+    const csrftoken = getCookie('csrftoken')
+    const url = `/descompletar_habito/${id_habito}/`
     fetch(url, {
         method: 'POST',
         headers: {
@@ -86,7 +84,6 @@ const descompletar_habito = (id_habito, elemento) => {
         if (data.descompletado) {
             elemento.classList.remove('active');
             actualizarNotificaciones(); // Llama a la actualización de notificaciones
-            console.log(data.message);
         }
     })
     .catch(error => console.error('Error al descompletar el hábito:', error));
@@ -120,6 +117,15 @@ const getCookie = (name) => {
  */
 const editarHabito = (event, id_habito) => {
     window.location.href = `/editar_habito/${id_habito}`
+}
+
+/**
+ * Redirige a la pagina para ver el progreso de un habito
+ * @param {*} event evento disparado
+ * @param {*} id_habito id del habito
+ */
+const progresoHabito = (event, id_habito) => {
+    window.location.href = `/progreso_habito/${id_habito}`
 }
 
 /**

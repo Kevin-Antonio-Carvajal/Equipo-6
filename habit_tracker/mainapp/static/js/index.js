@@ -3,18 +3,15 @@
  */
 let progresoChart = null;
 
-const start = () => {    
+const start = () => {
     // Mostramos la grafica por default
-    cargaGraficaDefault()
+    cargaGraficaDefault()    
     // Cargamos los filtros del mes
     cargaFiltroMes()
     // Cargamos el boton para eliminar los filtros
     cargaLimpiarFiltros()
 }
 
-/**
- * Carga el boton para eliminar los filtros
- */
 const cargaLimpiarFiltros = () => {
     const span = document.createElement('span')
     span.innerText = "Limpiar"
@@ -31,9 +28,6 @@ const cargaLimpiarFiltros = () => {
     filtros.appendChild(span)
 }
 
-/**
- * Carga el controlador para filtrar por mes
- */
 const cargaFiltroMes = () => {
     const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre']
     // Contenedor
@@ -167,22 +161,4 @@ const getCookie = (name) => {
     return cookieValue;
 }
 
-/**
- * Regresa a la pagina anterior
- */
-const backPage = () => {
-    // Regresamos a la pagina anterior
-    window.history.back();
-}
-
-/**
- * Redirige a la pagina para ver el progreso de un habito
- * @param {*} event evento disparado
- * @param {*} id_habito id del habito
- */
-const progresoHabito = (event, id_habito) => {
-    window.location.href = `/progreso_habito/${id_habito}`
-}
-
-// Al cargarse el componente se ejecuta esa funcion
-start();
+start()

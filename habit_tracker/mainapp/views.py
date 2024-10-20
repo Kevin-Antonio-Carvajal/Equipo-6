@@ -39,9 +39,55 @@ class NotificacionGlobal(models.Model):
 
 def index(request):
 
-    return render(request, 'mainapp/index.html', {
-        'titulo': 'Pagina de Inicio'
-    })
+    usuario_contexto = get_usuario(request)
+    usuario = usuario_contexto.get('usuario')
+
+    if usuario is None:
+        messages.error(request, 'Debes iniciar sesión para ver tu diario.')
+        return render(request, 'mainapp/index.html', {
+            'titulo': 'Pagina de Inicio'
+        })
+
+    usuario = Usuario.objects.get(id_usuario=usuario['id'])
+    habitos = Habito.objects.filter(id_usuario=usuario)
+
+    fecha_actual = timezone.now()
+    primer_dia, ultimo_dia = calendar.monthrange(fecha_actual.year, fecha_actual.month)
+
+    # Diccionario para almacenar el progreso por día
+    progreso_acumulativo = {}
+
+    # Inicializamos el progreso en cero para cada día del mes
+    for dia in range(1, ultimo_dia + 1):
+        progreso_acumulativo[dia] = 0
+
+    # Iteramos sobre los hábitos del usuario
+    for habito in habitos:
+        # Filtramos los registros del mes actual para cada hábito
+        registros = Registro.objects.filter(
+            id_habito=habito, 
+            fecha_creacion__year=fecha_actual.year,
+            fecha_creacion__month=fecha_actual.month
+        )
+        # Actualizamos el progreso acumulativo por cada registro
+        for registro in registros:
+            dia = registro.fecha_creacion.day
+            progreso_acumulativo[dia] += 1
+
+    # Categorias relacionadas a los habitos del usuario
+    categorias = Categoria.objects.filter(habito__id_usuario=usuario).distinct()
+
+    contexto = {
+        'titulo': 'Resumen de mi progreso',
+        'dias': list(progreso_acumulativo.keys()),
+        'progreso': list(progreso_acumulativo.values()),
+        'habitos': habitos,
+        'categorias': categorias
+    }
+    
+    return render(request, 'mainapp/index.html', contexto)
+
+    
 
 def diario(request):
     usuario_contexto = get_usuario(request)
@@ -394,7 +440,6 @@ def login_view(request):
     else:
         return render(request, 'mainapp/login.html')
     
-
 # Esta función maneja el cierre de sesión del usuario, redirigiéndolo al formulario de login.
 def logout_view(request):
     # Limpiamos toda la información almacenada en la sesión
@@ -625,3 +670,76 @@ def obtener_rachas(habito):
     racha_maxima = max(racha_maxima, racha_temporal)
 
     return racha_actual, racha_maxima
+
+def filtrar_progreso(request, categoria, mes):
+    if request.method == 'POST':
+        try:
+            # Obtener el usuario que inició sesión
+            usuario_contexto = get_usuario(request)
+            usuario = usuario_contexto.get('usuario')
+
+            if usuario is None:
+                return JsonResponse({
+                    'error': 'Debes iniciar sesión para obtener información de tu progreso.'
+                }, status=401)
+
+            usuario = Usuario.objects.get(id_usuario=usuario['id'])
+
+            # Convertir los parámetros a enteros
+            categoria = int(categoria)
+            mes = int(mes)
+
+            # Validar el mes
+            if not 1 <= mes <= 12:
+                return JsonResponse({'error': 'Mes inválido.'}, status=400)
+
+            # Obtener el año actual o puedes permitir que también se filtre por año
+            fecha_actual = timezone.now()
+            año = fecha_actual.year
+
+            # Filtrar hábitos por usuario y, si categoría != 0, por categoría
+            habitos = Habito.objects.filter(id_usuario=usuario)
+            if categoria != 0:
+                habitos = habitos.filter(id_categoria__id_categoria=categoria)
+
+            # Obtener el último día del mes
+            _, ultimo_dia = calendar.monthrange(año, mes)
+
+            # Inicializar el progreso acumulativo
+            progreso_acumulativo = {dia: 0 for dia in range(1, ultimo_dia + 1)}
+
+            # Iterar sobre los hábitos y acumular los registros
+            registros = Registro.objects.filter(
+                id_habito__in=habitos,
+                fecha_creacion__year=año,
+                fecha_creacion__month=mes
+            )
+
+            for registro in registros:
+                dia = registro.fecha_creacion.day
+                if 1 <= dia <= ultimo_dia:
+                    progreso_acumulativo[dia] += 1
+
+            # Opcional: Obtener categorías para actualizar en el frontend
+            categorias = Categoria.objects.filter(habito__id_usuario=usuario).distinct()
+
+            # Preparar los datos para el JSON
+            data = {
+                'dias': list(progreso_acumulativo.keys()),
+                'progreso': list(progreso_acumulativo.values()),
+                'habitos': list(habitos.values('id_habito', 'nombre')),
+                'categorias': list(categorias.values('id_categoria', 'nombre'))
+            }
+
+            return JsonResponse(data, status=200)
+
+        except Usuario.DoesNotExist:
+            return JsonResponse({'error': 'Usuario no encontrado.'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    else:
+        return JsonResponse({
+            'error': 'Petición inválida. Solo se acepta POST.'
+        }, status=400)
+
+        
