@@ -1,0 +1,73 @@
+{% extends '../layouts/layout.html' %}
+
+{% load static %}
+
+{% block title %}
+    {{ titulo }}
+{% endblock %}
+
+{% block content %}    
+    <!-- Estilos -->
+    {% block styles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/progreso_habito.css' %}">
+    {% endblock %}
+    <!-- Contenedor grafico -->
+    <div id="main-container">
+        <div class="progreso-info">
+            <div class="subtitle">
+                <i class="fa-solid fa-arrow-left back" onclick="backPage()"></i>
+                <h4>{{ titulo }}</h4>
+                <!-- Lo colocamos para distribuir el titulo -->
+                <i class="fa-solid fa-x tache"></i>
+            </div>
+            <div class="card-grafica">
+                <div class="habito-info">                
+                    <!-- Categoria -->
+                    <h4>{{ habito.nombre }}</h4>
+                    <div class="categoria">
+                        <i class="fa-solid fa-tag" style="color: {{ categoria.color }};"></i>
+                        <span>{{ categoria.nombre }}</span>
+                    </div>                    
+                </div>
+                <div class="grafica-container">    
+                    <div>
+                        <canvas id="graficaCircular"></canvas>
+                        <p class="progreso">{{ porcentaje|floatformat:0 }}%</p>
+                        <p>Progreso mensual</p>
+                    </div>                                    
+                </div>                
+            </div>
+            <div id="rachas">  
+                <div class="card-racha racha-actual">
+                    <div class="icono">
+                        <i class="fa-solid fa-fire"></i>
+                    </div>
+                    <div class="racha-info">
+                        <p class="racha-titulo">Racha actual</p>
+                        <p class="racha-valor">
+                            {{ racha_actual }}{% if racha_maxima == 1 %} día{% else %} días{% endif %}
+                        </p>
+                    </div>
+                </div>             
+                <div class="card-racha racha-maxima">
+                    <div class="icono">
+                        <i class="fa-solid fa-medal"></i>
+                    </div>
+                    <div class="racha-info">
+                        <p class="racha-titulo">Racha actual</p>
+                        <p class="racha-valor">
+                            {{ racha_maxima }}{% if racha_maxima == 1 %} día{% else %} días{% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Data -->
+    <div id="data-completado" style="display: none;" data-completado="{{ data_circular.completado }}"></div>
+    <div id="data-restante" style="display: none;" data-restante="{{ data_circular.restante }}"></div>
+    {% block scripts %}
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="{% static 'js/progreso_habito.js' %}"></script>
+    {% endblock %}
+{% endblock %}

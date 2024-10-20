@@ -1,3 +1,5 @@
+import calendar
+import matplotlib.pyplot as plt
 from datetime import date
 from django.utils import timezone
 from django.http import JsonResponse
@@ -433,6 +435,188 @@ def obtener_notificaciones(request):
         'notificaciones_no_leidas': len(notificaciones_data)
     })
 
+def progreso(request):
 
+    # Obtenemos el usuario que inicio sesion
+    usuario_contexto = get_usuario(request)
+    usuario = usuario_contexto.get('usuario')
+
+    if usuario is None:
+        # Si no hay un usuario en la sesión, redirigir al inicio de sesión
+        messages.error(request, 'Debes iniciar sesión para obtener informacion de tu progreso.')
+        return redirect('login')
     
+    usuario = Usuario.objects.get(id_usuario=usuario['id'])
+    habitos = Habito.objects.filter(id_usuario=usuario)
+
+    fecha_actual = timezone.now()
+    primer_dia, ultimo_dia = calendar.monthrange(fecha_actual.year, fecha_actual.month)
+
+    # Diccionario para almacenar el progreso por día
+    progreso_acumulativo = {}
+
+    # Inicializamos el progreso en cero para cada día del mes
+    for dia in range(1, ultimo_dia + 1):
+        progreso_acumulativo[dia] = 0
+
+    # Iteramos sobre los hábitos del usuario
+    for habito in habitos:
+        # Filtramos los registros del mes actual para cada hábito
+        registros = Registro.objects.filter(
+            id_habito=habito, 
+            fecha_creacion__year=fecha_actual.year,
+            fecha_creacion__month=fecha_actual.month
+        )
+        # Actualizamos el progreso acumulativo por cada registro
+        for registro in registros:
+            dia = registro.fecha_creacion.day
+            progreso_acumulativo[dia] += 1
+
+    contexto = {
+        'titulo': 'Mi Progreso',
+        'dias': list(progreso_acumulativo.keys()),
+        'progreso': list(progreso_acumulativo.values())
+    }
+
+    return render(request, 'mainapp/progreso.html', contexto)
+
+def progreso_habito(request, id_habito):
+
+     # Obtenemos el usuario que inicio sesion
+    usuario_contexto = get_usuario(request)
+    usuario = usuario_contexto.get('usuario')
+
+    if usuario is None:
+        # Si no hay un usuario en la sesión, redirigir al inicio de sesión
+        messages.error(request, 'Debes iniciar sesión para obtener informacion del progreso de un habito')
+        return redirect('login')
+
+    if request.method == 'GET':
+        habito = None
+        try:
+            habito = Habito.objects.get(id_habito=id_habito)
+        except Habito.DoesNotExist:
+            messages.error(request, 'No existe habito con ese ID')
+            redirect('progreso')
+        
+        # Fecha actual y últimos días del mes
+        fecha_actual = timezone.now()
+        _, ultimo_dia = calendar.monthrange(fecha_actual.year, fecha_actual.month)
+
+        # Obtener el tipo de objetivo del hábito
+        tipo_objetivo = habito.id_objetivo.tipo
+
+        # Calcular el total esperado basado en el tipo de objetivo
+        if tipo_objetivo == 'diario':
+            total_esperado = ultimo_dia
+        elif tipo_objetivo == 'semanal':
+            total_semanas = (ultimo_dia + fecha_actual.weekday()) // 7 + 1
+            total_esperado = total_semanas
+        elif tipo_objetivo == 'mensual':
+            total_esperado = 1
+        else:
+            total_esperado = 0  # Manejar casos no definidos
+
+        racha_actual, racha_maxima = obtener_rachas(habito)
+
+        # Contar los registros completados en el mes actual
+        registros_completados = Registro.objects.filter(
+            id_habito=habito,
+            fecha_creacion__year=fecha_actual.year,
+            fecha_creacion__month=fecha_actual.month
+        ).count()
+
+        # Calcular el porcentaje de progreso
+        if total_esperado > 0:
+            porcentaje = (registros_completados / total_esperado) * 100
+            porcentaje = min(porcentaje, 100)  # Asegurar que no exceda 100%
+        else:
+            porcentaje = 0
+
+        # Datos para la gráfica circular
+        data_circular = {
+            'completado': registros_completados,
+            'restante': max(total_esperado - registros_completados, 0)
+        }
+
+        contexto = {
+            'titulo': 'Progreso del habito',
+            'habito': habito,
+            'objetivo': habito.id_objetivo.tipo,
+            'categoria': habito.id_categoria,
+            'porcentaje': porcentaje,
+            'data_circular': data_circular,
+            'racha_actual': racha_actual,
+            'racha_maxima': racha_maxima
+        }
+
+        return render(request, 'mainapp/progreso_habito.html', contexto)
     
+def obtener_racha_mas_larga(habito):
+    # Obtener los registros del hábito ordenados por fecha de creación
+    registros = Registro.objects.filter(id_habito=habito).order_by('fecha_creacion')
+
+    if not registros:
+        return 0  # Si no hay registros, la racha es 0
+
+    # Inicializar variables
+    racha_actual = 1
+    racha_maxima = 1
+
+    # Iterar sobre los registros para comparar fechas
+    for i in range(1, len(registros)):
+        # Diferencia entre la fecha actual y la anterior
+        diferencia_dias = (registros[i].fecha_creacion - registros[i - 1].fecha_creacion).days
+
+        # Si la diferencia es exactamente 1 día, la racha continúa
+        if diferencia_dias == 1:
+            racha_actual += 1
+        else:
+            # Si hay una brecha, la racha se reinicia
+            racha_maxima = max(racha_maxima, racha_actual)
+            racha_actual = 1
+
+    # Al final, actualizar la racha máxima por si la última racha fue la más larga
+    racha_maxima = max(racha_maxima, racha_actual)
+
+    return racha_maxima
+
+def obtener_rachas(habito):
+    # Obtener los registros del hábito ordenados por fecha de creación
+    registros = Registro.objects.filter(id_habito=habito).order_by('fecha_creacion')
+
+    if not registros:
+        return 0, 0  # Si no hay registros, las rachas son 0
+
+    # Inicializar variables
+    racha_actual = 1
+    racha_maxima = 1
+
+    # Inicializamos la racha actual
+    for i in range(len(registros)-1, 0, -1):  # Empezamos desde el registro más reciente
+        diferencia_dias = (registros[i].fecha_creacion - registros[i - 1].fecha_creacion).days
+
+        # Si la diferencia es exactamente 1 día, la racha actual continúa
+        if diferencia_dias == 1:
+            racha_actual += 1
+        else:
+            # Si hay una brecha, detenemos la racha actual
+            break
+
+    # Recorremos los registros para encontrar la racha máxima
+    racha_temporal = 1
+    for i in range(1, len(registros)):
+        diferencia_dias = (registros[i].fecha_creacion - registros[i - 1].fecha_creacion).days
+
+        # Si la diferencia es exactamente 1 día, la racha continúa
+        if diferencia_dias == 1:
+            racha_temporal += 1
+        else:
+            # Si hay una brecha, comparamos y reiniciamos
+            racha_maxima = max(racha_maxima, racha_temporal)
+            racha_temporal = 1
+
+    # Al final, actualizar la racha máxima si la última es la más larga
+    racha_maxima = max(racha_maxima, racha_temporal)
+
+    return racha_actual, racha_maxima

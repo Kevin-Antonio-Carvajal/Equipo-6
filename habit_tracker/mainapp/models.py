@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 # TABLA USUARIO
 class Usuario(models.Model):
@@ -7,6 +8,7 @@ class Usuario(models.Model):
     correo = models.EmailField(max_length=255, unique=True)  # VARCHAR(255), UNIQUE
     username = models.CharField(max_length=64, unique=True)  # VARCHAR(64), UNIQUE
     password = models.CharField(max_length=64)  # VARCHAR(64)
+    created_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.username

@@ -76,5 +76,15 @@ urlpatterns = [
         'obtener_notificaciones/',
         views.obtener_notificaciones,
         name='obtener_notificaciones'
+    ),
+    path(
+        'progreso/',
+        views.progreso,
+        name='progreso'
+    ),
+    path(
+        'progreso_habito/<int:id_habito>/',
+        views.progreso_habito,
+        name='progreso_habito'
     )
 ]
