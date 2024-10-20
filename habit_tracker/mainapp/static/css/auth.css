@@ -37,6 +37,11 @@ body {
     margin-bottom: 20px;
 }
 
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
 /* Estilo de los campos de formulario */
 form input[type="text"],
 form input[type="email"],

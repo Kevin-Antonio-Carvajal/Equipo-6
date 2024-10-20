@@ -6,7 +6,7 @@ import re
 class FormRegister(forms.Form):
     nombre = forms.CharField(
         label="Nombre completo",
-        max_length=40,  # Limitar a 40 caracteres
+        max_length=255,  # Limitar a 40 caracteres
         min_length=2,
         required=True,
         widget=forms.TextInput(attrs={'class': 'form-control'})
@@ -14,8 +14,8 @@ class FormRegister(forms.Form):
 
     username = forms.CharField(
         label="Nombre de usuario",
-        max_length=40,
-        min_length=2,
+        max_length=65,
+        min_length=3,
         required=True,
         widget=forms.TextInput(attrs={'class': 'form-control'})
     )
