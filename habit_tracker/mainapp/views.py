@@ -406,22 +406,40 @@ def logout_view(request):
     return redirect('login')
 
 def obtener_notificaciones(request):
+    # Obtener el usuario desde el contexto
     usuario_contexto = get_usuario(request)
     usuario = usuario_contexto.get('usuario')
 
     if usuario is None:
+        # Si no está autenticado, devolver un error JSON
         return JsonResponse({'error': 'Usuario no autenticado'}, status=401)
 
-    # Obtener hábitos no completados y notificaciones asociadas
+    # Obtener hábitos no completados por el usuario
     habitos_no_completados = obtener_habitos_no_completados(usuario)
     notificaciones = Notificacion.objects.filter(id_habito__in=habitos_no_completados, estatus=False)
 
+    # Si no hay notificaciones, devolver un mensaje de felicitación
     if not notificaciones.exists():
         return JsonResponse({
-            'notificaciones': [],
+            'notificaciones': [],  # No hay notificaciones pendientes
             'notificaciones_no_leidas': 0,
             'mensaje_felicitacion': '¡Felicitaciones! Has completado todos tus hábitos hoy.'
         })
+
+    # Si hay notificaciones, preparar los datos para devolver en formato JSON
+    notificaciones_data = [{
+        'id_notificacion': n.id_notificacion,  
+        'titulo': n.titulo,
+        'descripcion': n.descripcion,
+        'mensaje_motivacional': n.mensaje_motivacional
+    } for n in notificaciones]
+
+    # Devolver las notificaciones junto con el número de no leídas
+    return JsonResponse({
+        'notificaciones': notificaciones_data,
+        'notificaciones_no_leidas': len(notificaciones_data)
+    })
+
 
 def progreso(request):
 
