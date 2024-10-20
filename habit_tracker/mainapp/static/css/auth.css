@@ -1,8 +1,9 @@
 body {
-    background: #f0f8ff; /* Color de fondo similar al de la imagen */
-    font-family: Arial, sans-serif;
+    background: #f4f6f9; /* Fondo gris claro */
+    font-family: 'Roboto', sans-serif; /* Fuente moderna */
 }
 
+/* Contenedor principal */
 .auth-container {
     display: flex;
     justify-content: center;
@@ -13,22 +14,23 @@ body {
 .auth-card {
     background: #fff;
     padding: 40px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    width: 400px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    width: 500px; /* Aumentar el ancho */
     max-width: 100%;
     text-align: center;
 }
 
+/* Estilo del título */
 .auth-card h2 {
-    font-size: 24px;
-    font-weight: bold;
+    font-size: 28px;
+    font-weight: 700;
     margin-bottom: 10px;
 }
 
 .auth-card p {
-    font-size: 14px;
-    color: #777;
+    font-size: 16px;
+    color: #6c757d;
     margin-bottom: 20px;
 }
 
@@ -37,44 +39,122 @@ body {
     text-align: left;
 }
 
-.form-control {
+/* Estilo de los campos de formulario */
+form input[type="text"],
+form input[type="email"],
+form input[type="password"] {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     font-size: 16px;
-    border-radius: 5px;
-    border: 1px solid #ddd;
+    border-radius: 8px; /* Bordes redondeados */
+    border: 1px solid #ced4da; /* Borde gris tenue */
+    background-color: #f8f9fa; /* Fondo más claro */
+    margin-bottom: 15px;
+    box-shadow: none; /* Sin sombra interna */
+    transition: border-color 0.2s ease-in-out, background-color 0.2s ease-in-out;
 }
 
+/* Estilo cuando los campos están en foco */
+form input[type="text"]:focus,
+form input[type="email"]:focus,
+form input[type="password"]:focus {
+    border-color: #80bdff; /* Borde azul claro cuando se hace foco */
+    background-color: #fff;
+    outline: none;
+}
+
+/* Estilo del botón de registro */
 .btn {
-    background-color: #000;
-    color: #fff;
-    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    padding: 12px;
     width: 100%;
+    border-radius: 8px;
     border: none;
-    border-radius: 5px;
     font-size: 16px;
     cursor: pointer;
+    margin-top: 10px;
 }
 
-.btn-primary {
-    background-color: #000;
-}
-
+/* Estilo del botón al pasar el mouse */
 .btn:hover {
-    background-color: #333;
+    background-color: #0056b3;
 }
-
+/* Enlaces */
 .auth-links {
     margin-top: 20px;
 }
 
 .auth-links a {
-    color: #0066cc;
+    color: #007bff;
     text-decoration: none;
-    margin: 0 10px;
     font-size: 14px;
 }
 
 .auth-links a:hover {
     text-decoration: underline;
+}
+
+/* Estilo para los mensajes de error */
+/* Estilo para los mensajes de error */
+.error-message {
+    color: #e74c3c;  /* Rojo claro */
+    font-size: 14px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+/* Mensaje de alerta */
+.alert {
+    padding: 10px;
+    background-color: #f9edbe;
+    color: #c09853;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+
+/* Estilo del modal de error */
+.modal {
+    display: none; /* Oculto por defecto */
+    position: fixed;
+    top: 50%; /* Se posiciona al 50% del viewport vertical */
+    left: 50%; /* Se posiciona al 50% del viewport horizontal */
+    transform: translate(-50%, -50%); /* Se mueve hacia arriba y a la izquierda para quedar centrado */
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro semi-transparente */
+    width: 100vw;
+    height: 100vh;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    max-width: 80%; /* Ajusta el tamaño en pantallas pequeñas */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    position: relative;
+}
+
+.modal-content h3 {
+    color: #e74c3c;
+    margin-bottom: 15px;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 20px;
+    cursor: pointer;
+    color: #333;
+}
+
+.close-btn:hover {
+    color: #e74c3c;
 }

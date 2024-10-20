@@ -1,14 +1,18 @@
 body{
     font-family: "Poppins", sans-serif;
     background-color: aliceblue;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
 }
 
 
 .container {
+    flex: 1;
     max-width: 1280px !important;
-    height: 100vh;
-    position: relative;
-    padding: 0px;
+    width: 100%;
+    padding: 0;
 }
 
 .logo {
@@ -137,15 +141,13 @@ body{
 
 /* Footer */
 .footer {
-    left: 0px;
-    bottom: 0px;
-    position: absolute;
-    width: 100%;
     background-color: #fff;
-    color: #fff;
-    font-size: 14px;
+    width: 100%;
+    padding: 20px 0;
+    text-align: center;
+    position: relative;
+    margin-top: 40px;
 }
-
 .footer-container {
     display: flex;
     justify-content: space-between;
