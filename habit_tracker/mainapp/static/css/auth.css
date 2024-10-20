@@ -1,3 +1,4 @@
+/* Estilo del cuerpo */
 body {
     background: #f4f6f9; /* Fondo gris claro */
     font-family: 'Roboto', sans-serif; /* Fuente moderna */
@@ -11,6 +12,7 @@ body {
     min-height: 100vh;
 }
 
+/* Tarjeta del formulario */
 .auth-card {
     background: #fff;
     padding: 40px;
@@ -28,15 +30,11 @@ body {
     margin-bottom: 10px;
 }
 
+/* Subtítulo */
 .auth-card p {
     font-size: 16px;
     color: #6c757d;
     margin-bottom: 20px;
-}
-
-.form-group {
-    margin-bottom: 20px;
-    text-align: left;
 }
 
 /* Estilo de los campos de formulario */
@@ -80,6 +78,7 @@ form input[type="password"]:focus {
 .btn:hover {
     background-color: #0056b3;
 }
+
 /* Enlaces */
 .auth-links {
     margin-top: 20px;

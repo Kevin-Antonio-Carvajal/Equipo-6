@@ -16,6 +16,7 @@ from mainapp.forms import FormRegister
 from mainapp.CryptoUtils import cipher, sha256, decipher, validate
 from django.db import models
 from .models import Notificacion
+from .forms import FormLogin
 
 def obtener_habitos_no_completados(usuario):
     hoy = timezone.now().date()
@@ -385,9 +386,8 @@ def descompletar_habito(request, id_habito):
             'error': 'Peticion invalida'
         },status=400)
 
-# Esta función maneja el registro de nuevos usuarios, mostrando el formulario de registro y procesando la creación del usuario.
+#funcion que maneja el registro de un nuevo usuario
 def register(request):
-    
     if request.method == 'POST':
         formulario = FormRegister(request.POST)
         if formulario.is_valid():
@@ -396,14 +396,14 @@ def register(request):
             correo = data_form.get('correo')
             username = data_form.get('username')            
             password = data_form.get('password')
-            # Varificamos si el correo no ha sido registrado
-            existe_usuario = Usuario.objects.filter(correo=correo).exists()
-            if existe_usuario:
-                messages.error(request, f'Este correo electrónico ya está registrado. Si ya tienes una cuenta, por favor inicia sesión.')
-                return redirect('register')
+
+            # Verificamos si el correo ya está registrado
+            if Usuario.objects.filter(correo=correo).exists():
+                # Añadimos el error al campo 'correo' en el formulario
+                formulario.add_error('correo', 'Este correo electrónico ya está registrado. Si ya tienes una cuenta, por favor inicia sesión.')
             else:
-                # Registramos el usuario
-                hashed_password = sha256(cipher(password)).hexdigest()
+                # Registramos al usuario si el correo es nuevo
+                hashed_password = sha256(password.encode('utf-8')).hexdigest()
                 usuario = Usuario.objects.create(
                     nombre=nombre,
                     correo=correo,
@@ -412,33 +412,45 @@ def register(request):
                 )
                 messages.success(request, 'Te has registrado correctamente')
                 return redirect('index')
+        # Si el formulario no es válido o el correo ya existe, devolvemos el formulario con los errores
+        return render(request, 'mainapp/register.html', {'form': formulario})
     else:
+        # Mostramos el formulario en una solicitud GET
         return render(request, 'mainapp/register.html', {'form': FormRegister()})
 
 # Esta función maneja el inicio de sesión de los usuarios, autenticándolos y redirigiéndolos si las credenciales son correctas.
 def login_view(request):
     if request.method == 'POST':
-        correo = request.POST['username']
-        password = request.POST['password']
-        exite_usuario = Usuario.objects.filter(correo=correo).exists()
-        if not exite_usuario:
-            messages.error(request, 'Correo incorrecto')
-            return redirect('login')
-        else:
-            usuario = Usuario.objects.get(correo=correo)
-            if validate(password,usuario.password):
-                # Guardamos la informacion del usuario en la sesion
-                request.session['usuario_id'] = usuario.id_usuario
-                request.session['usuario_nombre'] = usuario.nombre
-                request.session['usuario_correo'] = usuario.correo
-                request.session['usuario_username'] = usuario.username
-                messages.success(request, f'Bienvenido, {usuario.nombre}!')
-                return redirect('index')
-            else:
-                messages.error(request, 'Contraseña incorrecta')
-                return redirect('login')
+        formulario = FormLogin(request.POST)
+        
+        if formulario.is_valid():
+            correo = formulario.cleaned_data.get('correo')
+            password = formulario.cleaned_data.get('password')
+
+            # Intentamos buscar el usuario
+            usuario = Usuario.objects.filter(correo=correo).first()
+
+            # Si no se encuentra el usuario o la contraseña no es válida
+            if usuario is None or not validate(password, usuario.password):
+                # Agregar mensaje de error genérico para mostrar en el modal
+                print("Se generó un error")  # Agregamos un print para verificar
+                return render(request, 'mainapp/login.html', {'form': formulario, 'error': 'Correo o contraseña incorrectos'})
+
+            # Si el login es exitoso, guardar la información del usuario en la sesión
+            request.session['usuario_id'] = usuario.id_usuario
+            request.session['usuario_nombre'] = usuario.nombre
+            request.session['usuario_correo'] = usuario.correo
+            request.session['usuario_username'] = usuario.username
+            return redirect('index')
+        
+        # Si el formulario no es válido, volvemos a mostrarlo con errores
+        return render(request, 'mainapp/login.html', {'form': formulario})
+    
     else:
-        return render(request, 'mainapp/login.html')
+        # Mostramos el formulario vacío en una solicitud GET
+        formulario = FormLogin()
+        return render(request, 'mainapp/login.html', {'form': formulario})
+
     
 # Esta función maneja el cierre de sesión del usuario, redirigiéndolo al formulario de login.
 def logout_view(request):

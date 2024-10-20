@@ -4,10 +4,9 @@ from django.core.exceptions import ValidationError
 import re
 
 class FormRegister(forms.Form):
-
     nombre = forms.CharField(
         label="Nombre completo",
-        max_length=255,
+        max_length=40,  # Limitar a 40 caracteres
         min_length=2,
         required=True,
         widget=forms.TextInput(attrs={'class': 'form-control'})
@@ -15,8 +14,8 @@ class FormRegister(forms.Form):
 
     username = forms.CharField(
         label="Nombre de usuario",
-        max_length=64,
-        min_length=3,
+        max_length=40,
+        min_length=2,
         required=True,
         widget=forms.TextInput(attrs={'class': 'form-control'})
     )
@@ -24,12 +23,12 @@ class FormRegister(forms.Form):
     correo = forms.EmailField(
         required=True,
         widget=forms.EmailInput(attrs={'class': 'form-control'})
-    )    
+    )
 
     password = forms.CharField(
         label="Contraseña",
         widget=forms.PasswordInput(attrs={'class': 'form-control'}),
-        required=True    
+        required=True
     )
 
     # Validación personalizada del nombre
