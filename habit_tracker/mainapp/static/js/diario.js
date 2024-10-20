@@ -138,33 +138,45 @@ const backPage = () => {
 
 // Llama a esta función cada vez que se complete o descomplete un hábito
 function actualizarNotificaciones() {
-    fetch('/obtener_notificaciones/')
-        .then(response => response.json())
-        .then(data => {
-            const notificationContent = document.getElementById('notification-content');
-            notificationContent.innerHTML = ''; // Limpia las notificaciones actuales
+    fetch('/obtener_notificaciones/', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest' // Para indicar que es una solicitud AJAX
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        const notificationContent = document.getElementById('notification-content');
+        const notificationCount = document.getElementById('notification-count');
 
-            // Si hay notificaciones pendientes, mostrar
-            if (data.notificaciones.length > 0) {
-                data.notificaciones.forEach(notificacion => {
-                    const notificationItem = document.createElement('div');
-                    notificationItem.classList.add('notification-item');
-                    notificationItem.innerHTML = `<strong>${notificacion.titulo}</strong><br>${notificacion.descripcion}<br><em>${notificacion.mensaje_motivacional}</em>`;
-                    notificationContent.appendChild(notificationItem);
-                });
-            } else if (data.mensaje_felicitacion) {
-                // Si no hay notificaciones, mostrar mensaje de felicitación
-                const felicitationItem = document.createElement('div');
-                felicitationItem.classList.add('notification-item');
-                felicitationItem.innerText = data.mensaje_felicitacion;
-                notificationContent.appendChild(felicitationItem);
-            }
+        notificationContent.innerHTML = '';  // Limpiar el contenido previo
 
-            // Actualiza el contador de notificaciones
-            const badge = document.querySelector('.badge');
-            badge.innerText = data.notificaciones_no_leidas;
-        })
-        .catch(error => console.error('Error al obtener notificaciones:', error));
+        if (data.notificaciones.length > 0) {
+            data.notificaciones.forEach(notificacion => {
+                const notificacionDiv = document.createElement('div');
+                notificacionDiv.classList.add('notification-item');
+
+                notificacionDiv.innerHTML = `
+                    <strong>${notificacion.titulo}</strong><br>
+                    ${notificacion.descripcion}<br>
+                    <em>${notificacion.mensaje_motivacional}</em><br>
+                    <a href="/editar_recordatorio/${notificacion.id}" class="btn btn-secondary btn-sm mt-2">Editar</a>
+                `;
+                notificationContent.appendChild(notificacionDiv);
+            });
+        } else {
+            notificationContent.innerHTML = `
+                <div class="notification-item">
+                    ¡Felicitaciones! Has completado todos tus hábitos hoy.
+                </div>
+            `;
+        }
+
+        // Actualizar el contador de notificaciones no leídas
+        notificationCount.textContent = data.notificaciones_no_leidas || '0';
+    })
+    .catch(error => console.error('Error al obtener las notificaciones:', error));
 }
 
 

@@ -77,6 +77,8 @@
                                   <div class="notification-title">{{ notificacion.titulo }}</div>
                                   <div class="notification-message">{{ notificacion.descripcion }}</div>
                                   <div class="notification-subtext">{{ notificacion.mensaje_motivacional }}</div>
+                                  <!-- Botón de editar -->
+                                  <a href="{% url 'editar_recordatorio' notificacion.id_notificacion %}" class="btn btn-secondary">Editar</a>
                               </div>
                           {% endfor %}
                       {% else %}
@@ -185,13 +187,22 @@
                 data.notificaciones.forEach(notificacion => {
                     const notificacionDiv = document.createElement('div');
                     notificacionDiv.classList.add('notification-item');
-                    notificacionDiv.innerHTML = `<strong>${notificacion.titulo}</strong><br>${notificacion.descripcion}<br><em>${notificacion.mensaje_motivacional}</em>`;
-                    notificationContent.appendChild(notificacionDiv);
-                });
-            } else {
-                notificationContent.innerHTML = '<div class="notification-item">¡Felicitaciones! Has completado todos tus hábitos hoy.</div>';
-            }
-
+                    // Ensure id_notificacion is used correctly and HTML is structured properly
+                    notificacionDiv.innerHTML = `
+                    <strong>${notificacion.titulo}</strong><br>
+                    ${notificacion.descripcion}<br>
+                    <em>${notificacion.mensaje_motivacional}</em><br>
+                    <a href="/editar_recordatorio/${notificacion.id_notificacion}" class="btn btn-secondary btn-sm mt-2">Editar</a>
+                `;
+                notificationContent.appendChild(notificacionDiv);
+            });
+        } else {
+            notificationContent.innerHTML = `
+                <div class="notification-item">
+                    ¡Felicitaciones! Has completado todos tus hábitos hoy.
+                </div>
+            `;
+        }       
             // Actualizar el contador de notificaciones no leídas
             notificationCount.textContent = data.notificaciones_no_leidas || '0';
         })

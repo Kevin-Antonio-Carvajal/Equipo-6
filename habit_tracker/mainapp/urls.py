@@ -92,4 +92,8 @@ urlpatterns = [
         views.filtrar_progreso,
         name='filtrar_progreso'
     )
+    path('editar_recordatorio/<int:id_notificacion>/', 
+    views.editar_recordatorio, 
+    name='editar_recordatorio'
+    ) 
 ]

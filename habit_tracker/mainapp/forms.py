@@ -2,6 +2,7 @@ from django import forms
 from django.core import validators
 from django.core.exceptions import ValidationError
 import re
+from .models import Notificacion
 
 class FormRegister(forms.Form):
 
@@ -80,3 +81,8 @@ class FormLogin(forms.Form):
         ),
         required=True,
     )
+
+class NotificacionForm(forms.ModelForm):
+    class Meta:
+        model = Notificacion
+        fields = ['titulo', 'descripcion', 'mensaje_motivacional']

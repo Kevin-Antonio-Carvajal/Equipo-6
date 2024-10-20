@@ -16,6 +16,7 @@ from mainapp.forms import FormRegister
 from mainapp.CryptoUtils import cipher, sha256, decipher, validate
 from django.db import models
 from .models import Notificacion
+from .forms import NotificacionForm
 
 def obtener_habitos_no_completados(usuario):
     hoy = timezone.now().date()
@@ -450,35 +451,40 @@ def logout_view(request):
     return redirect('login')
 
 def obtener_notificaciones(request):
+    # Obtener el usuario desde el contexto
     usuario_contexto = get_usuario(request)
     usuario = usuario_contexto.get('usuario')
 
     if usuario is None:
+        # Si no está autenticado, devolver un error JSON
         return JsonResponse({'error': 'Usuario no autenticado'}, status=401)
 
-    # Obtener hábitos no completados y notificaciones asociadas
+    # Obtener hábitos no completados por el usuario
     habitos_no_completados = obtener_habitos_no_completados(usuario)
     notificaciones = Notificacion.objects.filter(id_habito__in=habitos_no_completados, estatus=False)
 
-    # Verificar si no hay notificaciones pendientes
+    # Si no hay notificaciones, devolver un mensaje de felicitación
     if not notificaciones.exists():
         return JsonResponse({
-            'notificaciones': [],
+            'notificaciones': [],  # No hay notificaciones pendientes
             'notificaciones_no_leidas': 0,
             'mensaje_felicitacion': '¡Felicitaciones! Has completado todos tus hábitos hoy.'
         })
 
-    # Preparar las notificaciones en formato JSON
+    # Si hay notificaciones, preparar los datos para devolver en formato JSON
     notificaciones_data = [{
+        'id_notificacion': n.id_notificacion,  
         'titulo': n.titulo,
         'descripcion': n.descripcion,
         'mensaje_motivacional': n.mensaje_motivacional
     } for n in notificaciones]
 
+    # Devolver las notificaciones junto con el número de no leídas
     return JsonResponse({
         'notificaciones': notificaciones_data,
         'notificaciones_no_leidas': len(notificaciones_data)
     })
+
 
 def progreso(request):
 
@@ -743,3 +749,19 @@ def filtrar_progreso(request, categoria, mes):
         }, status=400)
 
         
+def editar_recordatorio(request, id_notificacion):
+    # Obtiene la notificación por el id proporcionado
+    notificacion = get_object_or_404(Notificacion, id_notificacion=id_notificacion)
+    
+    if request.method == 'POST':
+        # Si el método es POST, procesa los datos enviados en el formulario
+        form = NotificacionForm(request.POST, instance=notificacion)
+        if form.is_valid():
+            form.save()
+            return redirect('diario')  # Cambia 'nombre_de_la_vista' por la vista a la que redirigirás tras la edición
+    else:
+        # Si el método es GET, muestra el formulario con los datos actuales
+        form = NotificacionForm(instance=notificacion)
+    
+    # Renderiza la plantilla 'editar_recordatorio.html' con el formulario
+    return render(request, 'mainapp/editar_recordatorio.html', {'form': form})
