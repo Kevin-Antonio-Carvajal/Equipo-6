@@ -10,7 +10,8 @@ CREATE TABLE `Usuario` (
     `nombre` VARCHAR(255) NOT NULL,
     `correo` VARCHAR(255) NOT NULL UNIQUE,
     `username` VARCHAR(64) NOT NULL UNIQUE,
-    `password` VARCHAR(64) NOT NULL
+    `password` VARCHAR(64) NOT NULL,
+    `created_date` DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 -- Llave primaria --
 ALTER TABLE `Usuario`
