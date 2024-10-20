@@ -86,5 +86,9 @@ urlpatterns = [
         'progreso_habito/<int:id_habito>/',
         views.progreso_habito,
         name='progreso_habito'
-    )
+    ),
+    path('editar_recordatorio/<int:id_notificacion>/', 
+    views.editar_recordatorio, 
+    name='editar_recordatorio'
+    ) 
 ]

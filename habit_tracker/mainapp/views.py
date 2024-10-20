@@ -16,6 +16,7 @@ from mainapp.forms import FormRegister
 from mainapp.CryptoUtils import cipher, sha256, decipher, validate
 from django.db import models
 from .models import Notificacion
+from .forms import NotificacionForm
 
 def obtener_habitos_no_completados(usuario):
     hoy = timezone.now().date()
@@ -415,25 +416,12 @@ def obtener_notificaciones(request):
     habitos_no_completados = obtener_habitos_no_completados(usuario)
     notificaciones = Notificacion.objects.filter(id_habito__in=habitos_no_completados, estatus=False)
 
-    # Verificar si no hay notificaciones pendientes
     if not notificaciones.exists():
         return JsonResponse({
             'notificaciones': [],
             'notificaciones_no_leidas': 0,
             'mensaje_felicitacion': '¡Felicitaciones! Has completado todos tus hábitos hoy.'
         })
-
-    # Preparar las notificaciones en formato JSON
-    notificaciones_data = [{
-        'titulo': n.titulo,
-        'descripcion': n.descripcion,
-        'mensaje_motivacional': n.mensaje_motivacional
-    } for n in notificaciones]
-
-    return JsonResponse({
-        'notificaciones': notificaciones_data,
-        'notificaciones_no_leidas': len(notificaciones_data)
-    })
 
 def progreso(request):
 
@@ -625,3 +613,20 @@ def obtener_rachas(habito):
     racha_maxima = max(racha_maxima, racha_temporal)
 
     return racha_actual, racha_maxima
+
+def editar_recordatorio(request, id_notificacion):
+    # Obtiene la notificación por el id proporcionado
+    notificacion = get_object_or_404(Notificacion, id_notificacion=id_notificacion)
+    
+    if request.method == 'POST':
+        # Si el método es POST, procesa los datos enviados en el formulario
+        form = NotificacionForm(request.POST, instance=notificacion)
+        if form.is_valid():
+            form.save()
+            return redirect('diario')  # Cambia 'nombre_de_la_vista' por la vista a la que redirigirás tras la edición
+    else:
+        # Si el método es GET, muestra el formulario con los datos actuales
+        form = NotificacionForm(instance=notificacion)
+    
+    # Renderiza la plantilla 'editar_recordatorio.html' con el formulario
+    return render(request, 'mainapp/editar_recordatorio.html', {'form': form})
