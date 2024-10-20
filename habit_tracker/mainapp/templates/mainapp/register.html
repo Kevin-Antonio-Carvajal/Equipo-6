@@ -4,26 +4,64 @@
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/auth.css' %}">
-<!-- Mostrar mensajes -->
-{% if messages %}
-{% for message in messages %}
-    <div class="message">
-        {{ message }}
-    </div>
-{% endfor %}
-{% endif %}
+
 <div class="auth-container">
     <div class="auth-card">
         <h2>Registrarse</h2>
         <p>Crea una cuenta para el seguimiento de tus hábitos</p>
         <form action="{% url 'register' %}" method="post">
             {% csrf_token %}
+            
+            <!-- Campos del formulario -->
             {{ form.as_p }}
+
             <button type="submit" class="btn btn-primary btn-block">Registrarse</button>
         </form>
+
         <div class="auth-links">
             <a href="{% url 'login' %}">¿Ya tienes una cuenta? Iniciar sesión</a>
         </div>
     </div>
 </div>
+
+<!-- Modal para mostrar errores -->
+{% if form.errors %}
+<div id="errorModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" id="closeModal">&times;</span>
+        <h3>Error en el formulario</h3>
+        <ul>
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <li>{{ field.label }}: {{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endif %}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var modal = document.getElementById("errorModal");
+        var closeBtn = document.getElementById("closeModal");
+
+        if (modal) {
+            modal.style.display = "block"; // Mostrar el modal si hay errores
+
+            // Cerrar el modal cuando se hace clic en el botón de cerrar
+            closeBtn.onclick = function() {
+                modal.style.display = "none";
+            };
+
+            // Cerrar el modal si se hace clic fuera del contenido del modal
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            };
+        }
+    });
+</script>
+
 {% endblock %}
