@@ -388,23 +388,23 @@ def descompletar_habito(request, id_habito):
 
 # Esta función maneja el registro de nuevos usuarios, mostrando el formulario de registro y procesando la creación del usuario.
 def register(request):
-    
     if request.method == 'POST':
         formulario = FormRegister(request.POST)
         if formulario.is_valid():
             data_form = formulario.cleaned_data
             nombre = data_form.get('nombre')
             correo = data_form.get('correo')
-            username = data_form.get('username')            
+            username = data_form.get('username')
             password = data_form.get('password')
-            # Varificamos si el correo no ha sido registrado
+            
+            # Verificar si el correo ya está registrado
             existe_usuario = Usuario.objects.filter(correo=correo).exists()
             if existe_usuario:
-                messages.error(request, f'Este correo electrónico ya está registrado. Si ya tienes una cuenta, por favor inicia sesión.')
+                messages.error(request, 'Este correo electrónico ya está registrado. Si ya tienes una cuenta, por favor inicia sesión.')
                 return redirect('register')
             else:
-                # Registramos el usuario
-                hashed_password = sha256(cipher(password)).hexdigest()
+                # Registrar nuevo usuario con contraseña cifrada usando el cifrado que ya habías implementado
+                hashed_password = sha256(cipher(password)).hexdigest()  # Dejar el método original
                 usuario = Usuario.objects.create(
                     nombre=nombre,
                     correo=correo,
@@ -413,6 +413,12 @@ def register(request):
                 )
                 messages.success(request, 'Te has registrado correctamente')
                 return redirect('index')
+        else:
+            # Si el formulario no es válido, mostramos los errores
+            for field, errors in formulario.errors.items():
+                for error in errors:
+                    messages.error(request, error)
+            return redirect('register')
     else:
         return render(request, 'mainapp/register.html', {'form': FormRegister()})
 
