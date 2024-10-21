@@ -4,14 +4,7 @@
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/auth.css' %}">
-<!-- Mostrar mensajes -->
-{% if messages %}
-{% for message in messages %}
-    <div class="message">
-        {{ message }}
-    </div>
-{% endfor %}
-{% endif %}
+
 <div class="auth-container">
     <div class="auth-card">
         <h2>Registrarse</h2>
@@ -24,6 +17,14 @@
         <div class="auth-links">
             <a href="{% url 'login' %}">¿Ya tienes una cuenta? Iniciar sesión</a>
         </div>
+        <!-- Mostrar mensajes -->
+{% if messages %}
+<div class="messages-container">
+    {% for message in messages %}
+        <p class="message {{ message.tags }}">{{ message }}</p>
+    {% endfor %}
+</div>
+{% endif %}
     </div>
 </div>
 {% endblock %}
