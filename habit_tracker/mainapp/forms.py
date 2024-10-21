@@ -85,4 +85,4 @@ class FormLogin(forms.Form):
 class NotificacionForm(forms.ModelForm):
     class Meta:
         model = Notificacion
-        fields = ['titulo', 'descripcion', 'mensaje_motivacional']
+        fields = ['titulo', 'descripcion'] 

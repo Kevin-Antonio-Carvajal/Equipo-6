@@ -1,5 +1,4 @@
 import calendar
-import matplotlib.pyplot as plt
 from datetime import date
 from django.utils import timezone
 from django.http import JsonResponse
