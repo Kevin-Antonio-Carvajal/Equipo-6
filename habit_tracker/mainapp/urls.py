@@ -36,17 +36,17 @@ urlpatterns = [
         'editar_habito/<int:id_habito>/', 
         views.editar_habito, 
         name='editar_habito'
-        ),
+    ),
     path(
         'eliminar_habito/<int:id_habito>/', 
         views.eliminar_habito, 
         name='eliminar_habito'
-        ), 
+    ), 
     path(
         'eliminar_habito/<int:id_habito>/', 
         views.eliminar_habito, 
         name='eliminar_habito'
-        ),
+    ),
     path(
         'completar_habito/<int:id_habito>/',
         views.completar_habito,
@@ -91,9 +91,10 @@ urlpatterns = [
         'filtrar_progreso/<int:categoria>/<int:mes>/',
         views.filtrar_progreso,
         name='filtrar_progreso'
-    )
-    path('editar_recordatorio/<int:id_notificacion>/', 
-    views.editar_recordatorio, 
-    name='editar_recordatorio'
+    ),
+    path(
+        'editar_recordatorio/<int:id_notificacion>/', 
+        views.editar_recordatorio, 
+        name='editar_recordatorio'
     ) 
 ]

@@ -6,7 +6,7 @@
 
 body {
     font-family: 'Roboto', sans-serif;
-    background-color: #f0f2f5;
+    background-color: aliceblue;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -15,7 +15,6 @@ body {
 
 .login-container {
     display: flex;
-    justify-content: center;
     align-items: center;
     width: 100%;
     min-height: 100vh;
@@ -31,8 +30,8 @@ body {
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* Mantener alineado el contenido a la izquierda */
-    justify-content: center; /* Asegura que el contenido se alinee verticalmente */
+    align-items: flex-start; 
+    justify-content: center; 
     text-align: left;
     box-sizing: border-box;
 }
@@ -52,6 +51,42 @@ p {
     color: #21272A;
     margin-bottom: 48px;
 }
+
+/* Estilo para la flecha de regresar */
+.back-arrow {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    text-decoration: none;
+}
+
+/* El círculo que envuelve la flecha */
+.circle {
+    width: 40px; 
+    height: 40px;
+    background-color: white; 
+    border-radius: 50%;
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); 
+}
+
+/* El ícono de la flecha */
+.circle i {
+    font-size: 18px; 
+    color: #21272A; 
+}
+
+/* Efecto hover para la flecha */
+.back-arrow:hover {
+    background-color: #f0f2f5; 
+}
+
+.back-arrow:hover i {
+    color: #1877f2; 
+}
+
 
 /* Labels de los campos */
 label {
@@ -93,7 +128,7 @@ input[type="email"], input[type="password"], input[type="text"] {
 
 .password-wrapper input {
     width: 100%;
-    padding-right: 40px; /* Asegúrate de dejar espacio para el ícono */
+    padding-right: 40px; 
 }
 
 /* Placeholder estilizado */
@@ -123,7 +158,7 @@ input::placeholder {
 .login-button {
     width: 540px;
     height: 48px;
-    background-color: #1877f2;
+    background-color: #1877f2; /* Color original del botón */
     color: white;
     border: none;
     border-radius: 5px;
@@ -131,6 +166,12 @@ input::placeholder {
     font-size: 16px;
     margin-top: 20px;
     text-align: center;
+    transition: background-color 0.3s ease; /* Transición suave para hover */
+}
+
+/* Estilo al pasar el cursor (hover) sobre el botón */
+.login-button:hover {
+    background-color: #145dbf;
 }
 
 /* Espaciado debajo del botón */
@@ -147,19 +188,25 @@ input::placeholder {
     margin-bottom: 48px;
 }
 
-/* Estilo para el texto de "No tienes cuenta. Regístrate" */
+/* Estilo para el texto de "¿No tienes cuenta? Regístrate" */
 .signup-text {
     text-align: center;
     font-family: 'Roboto', sans-serif;
     font-size: 14px;
-    color: #001D6C;
+    color: #001D6C; 
     margin-top: 48px;
 }
 
+/* Estilo para el enlace completo dentro de "¿No tienes cuenta? Regístrate" */
 .signup-text a {
-    color: #001D6C;
-    text-decoration: none;
-    font-weight: bold;
+    color: #001D6C; 
+    text-decoration: none; 
+}
+
+/* Efecto hover para el enlace */
+.signup-text a:hover {
+    color: #1877f2; 
+    text-decoration: underline;
 }
 
 .social-login {
@@ -205,7 +252,7 @@ input::placeholder {
         width: 60%;
         padding: 60px 20px 10px 20px;
         height: auto;
-        align-items: center; /* Centrar el contenido en pantallas medianas */
+        align-items: center
     }
 
     input[type="email"], input[type="password"], .password-wrapper, .login-button, .options, .separator {
@@ -224,14 +271,14 @@ input::placeholder {
 /* Media queries para pantallas pequeñas (móviles) */
 @media screen and (max-width: 768px) {
     .login-container {
-        padding: 0 10px; /* Reducir el padding en pantallas móviles */
+        padding: 0 10px;
     }
 
     .login-box {
         width: 60%;
         padding: 50px 15px 0px 20px;
         height: auto;
-        align-items: center; /* Centrar el contenido en móviles */
+        align-items: center;
     }
 
     input[type="email"], input[type="password"], .password-wrapper, .login-button, .options, .separator {
