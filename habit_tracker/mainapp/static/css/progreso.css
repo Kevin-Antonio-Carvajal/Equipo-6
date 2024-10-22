@@ -1,7 +1,7 @@
 .subtitle{
     display: flex;
     justify-content: space-between;
-    padding: 24px 24px 12px 24px;
+    padding: 24px 24px 12px 24px;    
 }
 
 .subtitle .back {
@@ -21,6 +21,7 @@
     border-radius: 12px;
     display: flex;
     gap: 24px;
+    min-height: 100vh;
 }
 
 /* Habitos */
@@ -92,6 +93,7 @@
     padding: 12px;
     display: flex;
     justify-content: center;
+    max-height: 400px;
 }
 
 #estadisticas-container #grafica {

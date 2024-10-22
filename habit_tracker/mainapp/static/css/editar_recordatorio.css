@@ -4,6 +4,10 @@ body {
     margin: 0;
 }
 
+#main-container {
+    min-height: 100vh;
+}
+
 .edit-container {
     background-color: #fff;
     padding: 40px;
@@ -12,7 +16,7 @@ body {
     width: 450px;
     max-width: 90%;
     margin: 50px auto;
-    transition: all 0.3s ease;
+    transition: all 0.3s ease;    
 }
 
 .edit-container:hover {

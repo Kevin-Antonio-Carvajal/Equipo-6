@@ -400,7 +400,14 @@ def register(request):
             existe_usuario = Usuario.objects.filter(correo=correo).exists()
             if existe_usuario:
                 messages.error(request, 'Este correo electrónico ya está registrado. Si ya tienes una cuenta, por favor inicia sesión.')
-                return redirect('register')
+                contexto = {
+                    'form': formulario,  # Pasamos el formulario con los datos ingresados para mantenerlos
+                    'nombre_intento': nombre,
+                    'correo_intento': correo,
+                    'username_intento': username,
+                    'password_intento': password
+                }   
+                return render(request, 'mainapp/register.html', contexto)
             else:
                 # Registrar nuevo usuario con contraseña cifrada usando el cifrado que ya habías implementado
                 hashed_password = sha256(cipher(password)).hexdigest()  # Dejar el método original
@@ -417,7 +424,16 @@ def register(request):
             for field, errors in formulario.errors.items():
                 for error in errors:
                     messages.error(request, error)
-            return redirect('register')
+
+            # En caso de error, volvemos a pasar el formulario con los datos ingresados
+            contexto = {
+                'form': formulario,  # El formulario con errores mantendrá los datos
+                'nombre_intento': request.POST.get('nombre', ''),
+                'correo_intento': request.POST.get('correo', ''),
+                'username_intento': request.POST.get('username', ''),
+                'password_intento': request.POST.get('password', '')
+            }
+            return render(request, 'mainapp/register.html', contexto)
     else:
         return render(request, 'mainapp/register.html', {'form': FormRegister()})
 
@@ -426,10 +442,14 @@ def login_view(request):
     if request.method == 'POST':
         correo = request.POST['username']
         password = request.POST['password']
+        contexto = {
+            'correo_intento': correo,
+            'password_intento': password
+        }
         exite_usuario = Usuario.objects.filter(correo=correo).exists()
         if not exite_usuario:
-            messages.error(request, 'Correo incorrecto')
-            return redirect('login')
+            messages.error(request, 'Correo incorrecto')            
+            return render(request, 'mainapp/login.html', contexto)
         else:
             usuario = Usuario.objects.get(correo=correo)
             if validate(password,usuario.password):
@@ -442,7 +462,7 @@ def login_view(request):
                 return redirect('index')
             else:
                 messages.error(request, 'Contraseña incorrecta')
-                return redirect('login')
+                return render(request, 'mainapp/login.html', contexto)
     else:
         return render(request, 'mainapp/login.html')
     
