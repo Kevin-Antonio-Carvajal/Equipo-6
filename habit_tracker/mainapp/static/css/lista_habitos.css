@@ -1,13 +1,26 @@
-/* lista_habitos.css */
-body {
-    background-color: #f0f4f8;
-    margin: 0;
+.lista-habito-container {
+    max-width: 800px;
+    padding: 24px 0px;
+    margin: 0 auto; 
 }
 
-.container {
-    max-width: 800px;
-    margin: 0 auto;
-    min-height: 100vh;
+.subtitle{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.subtitle .back {
+    cursor: pointer;
+}
+
+.subtitle h4 {
+    color: #2196F3;
+    font-weight: 600;
+}
+
+.subtitle .tache {
+    visibility: hidden;
 }
 
 .habits-container {

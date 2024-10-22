@@ -1,30 +1,48 @@
-{% extends 'layouts/layout.html' %}
-{% load static %} <!-- Cargar etiquetas estáticas aquí -->
+<!-- Agregamos el Layout -->
+{% extends '../layouts/layout.html' %}
 
-{% block title %}Lista de Hábitos{% endblock %}
+<!-- Cargamos el directorio Static-->
+{% load static %}
 
-{% block content %}
-<link rel="stylesheet" href="{% static 'css/lista_habitos.css' %}"> <!-- Enlace al archivo CSS -->
-<div class="container mt-4">
-    <h2>Hábitos Registrados</h2>
-    <div class="habits-container">
-        {% for habito in habitos %}
-        <div class="habit-card">
-            <div class="habit-header">
-                <div class="habit-title">{{ habito.nombre }}</div>
-                <div class="habit-progress">{{ habito.frecuencia }} vez/veces al día</div>
-            </div>
-            <div class="progress-bar">
-                <div class="progress-bar-fill" style="width: 50%;"></div> <!-- Ajusta el ancho según el progreso real -->
-            </div>
-            <div class="habit-actions">
-                <a href="{% url 'editar_habito' habito.id_habito %}" class="action-button edit-button">✎</a>
-                <a href="{% url 'eliminar_habito' habito.id_habito %}" class="action-button delete-button" onclick="return confirm('¿Estás seguro de que deseas eliminar este hábito?');">🗑</a>
-            </div>
+<!-- Titulo -->
+{% block title %}
+    {{ titulo }}
+{% endblock %}
+
+<!-- Contenido -->
+ {% block content %}
+    <!-- Estilos -->
+    {% block styles %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/lista_habitos.css' %}">
+    {% endblock %}
+    <div class="lista-habito-container">            
+        <div class="subtitle">
+            <i class="fa-solid fa-arrow-left back" onclick="backPage()"></i>
+            <h4>Hábitos Registrados</h4>
+            <i class="fa-solid fa-x tache"></i>
         </div>
-        {% empty %}
-        <p>No hay hábitos registrados.</p>
-        {% endfor %}
+        <div class="habits-container">
+            {% for habito in habitos %}
+            <div class="habit-card">
+                <div class="habit-header">
+                    <div class="habit-title">{{ habito.nombre }}</div>
+                    <div class="habit-progress">{{ habito.frecuencia }} vez/veces al día</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-bar-fill" style="width: 50%;"></div> 
+                </div>
+                <div class="habit-actions">
+                    <a href="{% url 'editar_habito' habito.id_habito %}" class="action-button edit-button">
+                        <i class="fas fa-edit"></i> 
+                    </a>
+                    <a href="{% url 'eliminar_habito' habito.id_habito %}" class="action-button delete-button" onclick="return confirm('¿Estás seguro de que deseas eliminar este hábito?');">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <p>No hay hábitos registrados.</p>
+            {% endfor %}
+        </div>
     </div>
-</div>
 {% endblock %}
