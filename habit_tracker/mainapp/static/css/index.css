@@ -28,6 +28,13 @@ h1 {
     color: #fff;
 }
 
+#presentacion img {
+    max-width: 100%;   /* La imagen no será más ancha que su contenedor */
+    height: auto;      /* Mantiene la proporción original de la imagen */
+    display: block;    /* Elimina los espacios blancos debajo de la imagen */
+    margin: 0 auto;    /* Centra la imagen horizontalmente si es necesario */
+}
+
 #titulo {
     color: #2196F3;
 }
