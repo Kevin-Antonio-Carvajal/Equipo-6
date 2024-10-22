@@ -40,6 +40,7 @@ class FormRegister(forms.Form):
     password = forms.CharField(
         label="Contraseña",
         widget=forms.PasswordInput(attrs={
+            'id': 'password',
             'class': 'form-control',
             'placeholder': 'Contraseña'  # Placeholder
         }),
