@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
     const togglePassword = document.querySelector(".toggle-password");
-    const passwordInput = document.querySelector("#id_password");
+    const passwordInput = document.querySelector("#password");
 
     togglePassword.addEventListener("click", function() {
         // Alterna el tipo de input entre "password" y "text"
