@@ -1,30 +1,82 @@
-<!-- mainapp/templates/mainapp/register.html -->
-{% extends 'layouts/layout.html' %}
 {% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrarse</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+</head>
+<body>
 
-{% block content %}
-<link rel="stylesheet" href="{% static 'css/auth.css' %}">
-
-<div class="auth-container">
-    <div class="auth-card">
-        <h2>Registrarse</h2>
-        <p>Crea una cuenta para el seguimiento de tus hábitos</p>
-        <form action="{% url 'register' %}" method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-primary btn-block">Registrarse</button>
-        </form>
-        <div class="auth-links">
-            <a href="{% url 'login' %}">¿Ya tienes una cuenta? Iniciar sesión</a>
+    <!-- Flecha para regresar a la página de inicio -->
+    <a href="{% url 'inicio' %}" class="back-arrow">
+        <div class="circle">
+            <i class="fas fa-arrow-left"></i> 
         </div>
-        <!-- Mostrar mensajes -->
-{% if messages %}
-<div class="messages-container">
-    {% for message in messages %}
-        <p class="message {{ message.tags }}">{{ message }}</p>
-    {% endfor %}
-</div>
-{% endif %}
+    </a>
+
+    <!-- Contenedor del registro -->
+    <div class="auth-container">
+        <div class="auth-box register-box">
+            <h1>Registrarse</h1>
+            <p>"Los grandes logros empiezan con pequeños hábitos."</p>
+
+            <!-- Formulario de registro -->
+            <form action="{% url 'register' %}" method="POST">
+                {% csrf_token %}
+
+                <label for="{{ form.nombre.id_for_label }}">Nombre completo</label>
+                {{ form.nombre }}
+
+                <label for="{{ form.username.id_for_label }}">Nombre de usuario</label>
+                {{ form.username }}
+
+                <label for="{{ form.correo.id_for_label }}">Correo electrónico</label>
+                {{ form.correo }}
+
+                <label for="{{ form.password.id_for_label }}">Contraseña</label>
+                <div class="password-wrapper">
+                    {{ form.password }}
+                    <span class="toggle-password">
+                        <i class="fas fa-eye"></i>
+                    </span>
+                </div>
+
+                <!-- Requisitos de la contraseña -->
+                <ul class="password-requirements">
+                    <li>Mínimo 8 caracteres</li>
+                    <li>Al menos una letra mayúscula</li>
+                    <li>Al menos una letra minúscula</li>
+                    <li>Al menos un número</li>
+                    <li>Al menos un carácter especial (ej: !@#$%)</li>
+                </ul>
+
+                <div class="before-auth-button"></div>
+
+                <!-- Mensajes de error (si existen) -->
+                {% if messages %}
+                <div class="messages-container">
+                    {% for message in messages %}
+                        <p class="message {{ message.tags }}">{{ message }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- Botón de registro -->
+                <button type="submit" class="auth-button">Registrarse</button>
+
+                <!-- Texto para iniciar sesión si ya tiene cuenta -->
+                <p class="register-text">
+                    <a href="{% url 'login' %}">¿Ya tienes una cuenta? Iniciar sesión</a>
+                </p>
+            </form>
+        </div>
     </div>
-</div>
-{% endblock %}
+
+    <!-- Script para mostrar/ocultar la contraseña -->
+    <script src="{% static 'js/togglePassword.js' %}"></script>
+</body>
+</html>

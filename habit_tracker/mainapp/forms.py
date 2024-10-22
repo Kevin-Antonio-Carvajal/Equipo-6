@@ -11,7 +11,10 @@ class FormRegister(forms.Form):
         max_length=255,
         min_length=2,
         required=True,
-        widget=forms.TextInput(attrs={'class': 'form-control'})
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Nombre'  # Placeholder
+        })
     )
 
     username = forms.CharField(
@@ -19,18 +22,28 @@ class FormRegister(forms.Form):
         max_length=64,
         min_length=3,
         required=True,
-        widget=forms.TextInput(attrs={'class': 'form-control'})
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Nombre de usuario'  # Placeholder
+        })
     )
 
     correo = forms.EmailField(
+        label="Correo electrónico",
         required=True,
-        widget=forms.EmailInput(attrs={'class': 'form-control'})
+        widget=forms.EmailInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Correo electrónico'  # Placeholder
+        })
     )    
 
     password = forms.CharField(
         label="Contraseña",
-        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
-        required=True    
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Contraseña'  # Placeholder
+        }),
+        required=True
     )
 
     # Validación personalizada del nombre
@@ -56,6 +69,8 @@ class FormRegister(forms.Form):
     # Validación personalizada de la contraseña
     def clean_password(self):
         password = self.cleaned_data.get('password')
+        if len(password) < 8:
+            raise ValidationError('La contraseña debe tener al menos 8 caracteres.')
         if not re.search(r'[A-Z]', password):
             raise ValidationError('La contraseña debe tener al menos una letra mayúscula.')
         if not re.search(r'[a-z]', password):
