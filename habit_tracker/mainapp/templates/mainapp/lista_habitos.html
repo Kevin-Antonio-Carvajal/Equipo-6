@@ -45,4 +45,16 @@
             {% endfor %}
         </div>
     </div>
+    <!-- JavaScript -->
+    {% block scripts %}
+    <script>    
+        /**
+         * Regresa a la pagina anterior
+         */
+        const backPage = () => {
+            // Regresamos a la pagina anterior
+            window.history.back();
+        }
+    </script>
+    {% endblock %}
 {% endblock %}

@@ -89,6 +89,11 @@
                 </div>
               </div>
             </li>
+            <li>
+              <div class="perfil-icon" onclick="editarPerfil()">
+                <i class="fa-solid fa-user"></i></a>
+              </div>
+            </li>
           {% else %}
             <li class="nav-item">
               <a class="nav-link" href="{% url 'login' %}">Iniciar sesión</a>
@@ -174,6 +179,11 @@
     document.addEventListener('DOMContentLoaded', function() {
         actualizarNotificaciones();
     });
+
+    // Redirigimos a editar perfil
+    const editarPerfil = () => {
+      window.location.href = `/editar_perfil`
+    }
   </script>
 </body>
 </html>

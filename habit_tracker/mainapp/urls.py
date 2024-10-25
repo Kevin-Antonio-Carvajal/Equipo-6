@@ -41,11 +41,6 @@ urlpatterns = [
         'eliminar_habito/<int:id_habito>/', 
         views.eliminar_habito, 
         name='eliminar_habito'
-    ), 
-    path(
-        'eliminar_habito/<int:id_habito>/', 
-        views.eliminar_habito, 
-        name='eliminar_habito'
     ),
     path(
         'completar_habito/<int:id_habito>/',
@@ -96,5 +91,10 @@ urlpatterns = [
         'editar_recordatorio/<int:id_notificacion>/', 
         views.editar_recordatorio, 
         name='editar_recordatorio'
+    ),
+    path(
+        'editar_perfil/', 
+        views.editar_perfil, 
+        name='editar_perfil'
     ) 
 ]

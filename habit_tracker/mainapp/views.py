@@ -11,7 +11,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib import messages
-from mainapp.forms import FormRegister
+from mainapp.forms import FormRegister, FormEditarPerfil
 from mainapp.CryptoUtils import cipher, sha256, decipher, validate
 from django.db import models
 from .models import Notificacion
@@ -790,3 +790,41 @@ def editar_recordatorio(request, id_notificacion):
     
     # Renderiza la plantilla 'editar_recordatorio.html' con el formulario
     return render(request, 'mainapp/editar_recordatorio.html', {'form': form})
+
+
+def editar_perfil(request):
+
+    # Obtenemos el usuario que inicio sesion
+    usuario_contexto = get_usuario(request)
+    usuario = usuario_contexto.get('usuario')
+
+    if usuario is None:
+        # Si no hay un usuario en la sesión, redirigir al inicio de sesión
+        messages.error(request, 'Debes iniciar sesión para ver tu perfil.')
+        return redirect('login')
+
+    usuario_obj = Usuario.objects.get(id_usuario=usuario['id'])
+
+    if request.method == 'POST':
+        formulario = FormEditarPerfil(request.POST)
+        if formulario.is_valid():
+            # Si el formulario es válido, actualizamos el usuario
+            usuario_obj.nombre = formulario.cleaned_data['nombre']
+            usuario_obj.username = formulario.cleaned_data['username']
+            usuario_obj.save()
+            messages.success(request, 'Perfil actualizado exitosamente.')
+            return redirect('editar_perfil')
+    else:
+        # Cargamos los valores actuales del usuario en el formulario
+        formulario = FormEditarPerfil(initial={
+            'nombre': usuario_obj.nombre,
+            'username': usuario_obj.username
+        })
+
+    contexto = {
+        'titulo': 'Mi perfil',
+        'form': formulario
+    }
+    
+    return render(request, 'mainapp/editar_perfil.html', contexto)
+        

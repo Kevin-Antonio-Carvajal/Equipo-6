@@ -1,0 +1,55 @@
+<!-- Agregamos el layout -->
+{% extends '../layouts/layout.html' %}
+
+<!-- Cargamos el directorio static -->
+{% load static %}
+
+
+{% block title %}
+{{ titulo }}
+{% endblock %}
+
+<!-- Contenido -->
+{% block content %}
+    <!-- Estilos -->
+    {% block styles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/editar_perfil.css' %}">
+    {% endblock %}
+    <div id="main-container">        
+        <div id="perfil-info">
+            <div class="subtitle">
+                <i class="fa-solid fa-arrow-left back" onclick="inicio()"></i>
+                <h4>{{ titulo }}</h4>
+                <!-- Lo colocamos para distribuir el titulo -->
+                <i class="fa-solid fa-x tache"></i>
+            </div>
+            <div id="form-container">
+                <h4>Informacion</h4>
+                <!-- Formulario para editar perfil -->
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form }}
+                    <!-- Mensajes de error (si existen) -->
+                    {% if messages %}
+                    <div class="messages-container">
+                        {% for message in messages %}
+                            <p class="message {{ message.tags }}">{{ message }}</p>
+                        {% endfor %}
+                    </div>  
+                    {% endif %}
+                    <!-- Botón para guardar los cambios -->
+                    <button type="submit" class="auth-button" onclick="enviarFormulario(event)">Guardar cambios</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- JavaScript -->
+    {% block scripts %}
+    <script>    
+        const inicio= () => {
+            // Redirigimos a la página anterior sin guardar esta en el historial
+            window.location.href = `/inicio/`
+        }
+    </script>
+    {% endblock %}
+{% endblock %}

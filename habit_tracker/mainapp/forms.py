@@ -52,6 +52,9 @@ class FormRegister(forms.Form):
         nombre = self.cleaned_data.get('nombre')
         if len(nombre) > 30:
             raise ValidationError('El nombre no debe tener más de 30 caracteres.')
+        # Validar que no contenga dígitos (números)
+        if any(char.isdigit() for char in nombre):
+            raise ValidationError('El nombre completo no puede contener dígitos.')            
         if nombre.isdigit():
             raise ValidationError('El nombre completo no puede contener solo números.')
         return nombre
@@ -102,3 +105,52 @@ class NotificacionForm(forms.ModelForm):
     class Meta:
         model = Notificacion
         fields = ['titulo', 'descripcion'] 
+
+class FormEditarPerfil(forms.Form):
+
+    nombre = forms.CharField(
+        label="Nombre completo",
+        max_length=255,
+        min_length=2,
+        required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Nombre'  # Placeholder
+        })
+    )
+
+    username = forms.CharField(
+        label="Nombre de usuario",
+        max_length=64,
+        min_length=3,
+        required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Nombre de usuario'  # Placeholder
+        })
+    )
+
+    # Validación personalizada del nombre
+    def clean_nombre(self):
+        nombre = self.cleaned_data.get('nombre')
+        if len(nombre) > 30:
+            raise ValidationError('El nombre no debe tener más de 30 caracteres.')
+        # Validar que no contenga dígitos (números)
+        if any(char.isdigit() for char in nombre):
+            raise ValidationError('El nombre completo no puede contener dígitos.')            
+        if nombre.isdigit():
+            raise ValidationError('El nombre completo no puede contener solo números.')
+        return nombre
+
+    # Validación personalizada del nombre de usuario
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if len(username) > 30:
+            raise ValidationError('El nombre de usuario no debe tener más de 30 caracteres.')
+        if username.isdigit():
+            raise ValidationError('El nombre de usuario no puede contener solo números.')
+        if not re.match(r'^[a-zA-Z0-9_]+$', username):
+            raise ValidationError('El nombre de usuario solo puede contener letras, números y guiones bajos.')
+        return username
+
+
