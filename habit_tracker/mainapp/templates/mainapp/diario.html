@@ -1,0 +1,86 @@
+<!-- Agregamos el Layout -->
+{% extends '../layouts/layout.html' %}
+
+<!-- Cargamos el directorio Static-->
+{% load static %}
+
+<!-- Titulo -->
+{% block title %}
+    {{ titulo }}
+{% endblock %}
+
+<!-- Contenido -->
+{% block content %}
+    <!-- Estilos -->
+    {% block styles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/diario.css' %}">
+    {% endblock %}
+
+    <!-- Mostrar mensajes flash -->
+    {% if messages %}
+        <div class="notifications">
+            {% for message in messages %}
+                <div class="alert alert-info">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="main-container">
+        <div class="diario-container">            
+            <div class="subtitle">
+                <i class="fa-solid fa-arrow-left back" onclick="backPage()"></i>
+                <h4>{{ titulo }}</h4>               
+                <!-- Lo colocamos para distribuir el titulo --> 
+                <a href="{% url 'lista_habitos' %}" data-toggle="tooltip" data-placement="top" title="Todos los habitos">
+                    <img src="../../static/images/lista.png" alt="imagen de lista" class="img-thumbnail">
+                </a>
+            </div>
+            <!-- Habitos del hoy -->
+            <div id="habitos">
+                {% if habitos %}
+                    {% for habito in habitos %}
+                    <div id="habito-{{ habito.id_habito }}" class="habito {% if habito.completado %}completed{% endif %}">
+                        <div class="informacion" onclick="editarHabito(event, {{ habito.id_habito }})">
+                            <!-- Categoria -->
+                            <div class="categoria">
+                                <i class="fa-solid fa-tag" style="color: {{ habito.categoria.color }};"></i>
+                                <span>{{ habito.categoria.nombre }}</span>
+                            </div>
+                            <!-- Nombre -->
+                            <div class="nombre">
+                                <span>{{ habito.nombre }}</span>
+                                <!-- Frecuencia -->
+                                <div class="frecuencia">
+                                    <span>
+                                        {{ habito.frecuencia }} 
+                                        {% if habito.frecuencia == 1 %}
+                                            vez al día
+                                        {% else %}
+                                            veces al día
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </div>                     
+                        </div>
+                        <!-- Ver estadisticas -->
+                        <i class="fa-solid fa-square-poll-vertical icono-estadisticas" onclick="progresoHabito(event, {{ habito.id_habito }})"></i>
+                        <!-- Completar -->   
+                        <div class="completar {% if habito.completado %}active{% endif %}" onclick="toggle(event, {{ habito.id_habito}})">
+                            <i class="fa-regular fa-circle-check"></i>
+                        </div>                       
+                    </div>
+                    {% endfor %}   
+                {% else %}
+                    <span>No hay habitos que mostrar</span>
+                {% endif %}
+            </div>
+        </div>        
+    </div>
+    <!-- JavaScript -->
+    {% block scripts %}
+        <script src="{% static 'js/diario.js' %}"></script>
+    {% endblock %}
+{% endblock %}
+
+
+

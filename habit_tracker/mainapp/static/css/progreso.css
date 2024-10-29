@@ -1,0 +1,122 @@
+.subtitle{
+    display: flex;
+    justify-content: space-between;
+    padding: 24px 24px 12px 24px;    
+}
+
+.subtitle .back {
+    cursor: pointer;
+}
+
+.subtitle h4 {
+    color: #2196F3;
+    font-weight: 600;
+}
+
+.subtitle .tache {
+    visibility: hidden;
+}
+
+#main-container {
+    border-radius: 12px;
+    display: flex;
+    gap: 24px;
+    min-height: 100vh;
+}
+
+/* Habitos */
+
+#habitos-container {
+    width: 100%;
+    background-color: #fff;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    padding: 24px;
+    max-height: 400px;
+    overflow-y: auto;
+    border-radius: 12px;
+}
+
+#habitos-container::-webkit-scrollbar {
+    /*Scrollbar*/
+    width: 10px;
+}
+
+#habitos-container::-webkit-scrollbar-thumb {
+    /*Scrollbar*/
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+#habitos-container::-webkit-scrollbar-track {
+    /*Scrollbar*/
+    background: rgba(0, 0, 0, 0.1);
+}
+
+#habitos {
+    width: 100%;
+}
+
+.tabla-habitos {
+    border-collapse: collapse;  /* Elimina los espacios entre las celdas */
+    background-color: #FFF;  /* Fondo blanco para la tabla */
+}
+
+.tabla-habitos th, .tabla-habitos td {
+    padding: 4px;
+    text-align: left;
+}
+
+.tabla-habitos th {
+    font-size: 12px;
+    font-weight: bold;
+    background-color: #f9f9f9;  /* Fondo más claro para la cabecera */
+}
+
+.tabla-habitos td {
+    font-size: smaller;
+}
+
+
+.tabla-habitos .habito:hover {
+    background-color: #f0f0f0;  /* Color de hover similar */
+}
+
+.tabla-habitos .habito {
+    cursor: pointer;
+}
+
+#estadisticas-container {
+    width: 100%;
+    background-color: #fff;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    justify-content: center;
+    max-height: 400px;
+}
+
+#estadisticas-container #grafica {
+    min-width: 300px;
+    min-height: 300px;
+}
+
+
+/* Filtros */
+#filtros {
+    display: flex;
+    justify-content: space-between;
+    font-size: small;
+    padding: 12px;
+}
+
+#filtros label {
+    margin-right: 6px;
+}
+
+#filtros span:last-child {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+

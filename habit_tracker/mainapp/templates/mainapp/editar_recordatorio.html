@@ -1,0 +1,25 @@
+{% extends 'layouts/layout.html' %}
+{% load static %} <!-- Cargar etiquetas estáticas -->
+
+{% block title %}Editar Recordatorio{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/editar_recordatorio.css' %}"> <!-- Enlace al archivo CSS -->
+<div id="main-container">
+    <div class="edit-container">
+        <h2>Editar Recordatorio</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="titulo">Título:</label>
+                <input type="text" id="titulo" name="titulo" value="{{ form.titulo.value|default_if_none:'' }}">
+            </div>
+            <div class="form-group">
+                <label for="descripcion">Descripción:</label>
+                <input type="text" id="descripcion" name="descripcion" value="{{ form.descripcion.value|default_if_none:'' }}">
+            </div>
+            <button type="submit" class="btn btn-primary save-btn">Guardar Cambios</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

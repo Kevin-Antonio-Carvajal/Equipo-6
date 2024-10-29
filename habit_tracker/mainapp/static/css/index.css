@@ -1,0 +1,65 @@
+h1 {
+    font-weight: 600;
+}
+
+#main-container{
+    margin-top: 24px;
+    min-height: 100vh;
+}
+
+#presentacion {
+    margin-top: 24px;
+    text-align: center;
+    padding: 32px;
+    background-color: #fff;
+    min-height: 100vh;
+}
+
+#presentacion p {
+    margin: 34px 0px;
+}
+
+#presentacion a {
+    background-color: #2196F3;
+    padding: 24px;
+    border-radius: 6px;
+    width: fit-content;
+    text-decoration: none;
+    color: #fff;
+}
+
+#presentacion img {
+    max-width: 100%;   /* La imagen no será más ancha que su contenedor */
+    height: auto;      /* Mantiene la proporción original de la imagen */
+    display: block;    /* Elimina los espacios blancos debajo de la imagen */
+    margin: 0 auto;    /* Centra la imagen horizontalmente si es necesario */
+}
+
+#titulo {
+    color: #2196F3;
+}
+
+/* Grafica */
+
+#estadisticas-container{
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    padding: 32px;
+}
+
+#filtros {
+    display: flex;
+    justify-content: space-between;
+    font-size: small;
+    padding: 12px;
+}
+
+#filtros label {
+    margin-right: 6px;
+}
+
+#filtros span:last-child {
+    text-decoration: underline;
+    cursor: pointer;
+}

@@ -1,18 +1,68 @@
 <!-- Agregamos el Layout -->
 {% extends '../layouts/layout.html' %}
 
+{% load static %}
+
 <!-- Titulo -->
  {% block title %}
     {{ titulo }}
  {% endblock %}
 
  <!-- Contenido -->
-  {% block content %}
-    <h1>{{ titulo }}</h1>
-    <!-- Mensaje de exito -->
-    {% if mensaje_exitoso%}
-    <div class="alert alert-success" role="alert">
-      {{ mensaje_exitoso }}
+  {% block content %}    
+    <!-- Estilos -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+    <div id="main-container">
+      <!-- Mostramos mensajes -->
+      {% if messages %}
+        {% for message in messages %}
+          <h2 style="color:#2196F3;">{{ message }}</h2>
+        {% endfor %}
+      {% endif %}
+      {% if usuario %}
+        <section id="main-container">
+          <h1 id="titulo">{{ titulo }}</h1>
+          <div id="estadisticas-container">
+            <div>
+                <div id="filtros">
+                    <span>Filtros: </span>
+                    <div>
+                        <label for="categoria">Categoria:</label>                        
+                        <select name="categoria" id="categoria" onchange="filtrar(event)">
+                        <option value="0" selected>Todas</option>
+                        {% for categoria in categorias %}                    
+                            <option value="{{ categoria.id_categoria }}">{{ categoria.nombre }}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                    <!-- Aqui se cargan los filtros de mes desde js -->
+                </div>
+                <!-- Contenedor grafico -->
+                <canvas id="grafica"></canvas>
+            </div>
+          </div>
+        </section>
+         <!-- Data -->
+        <div id="data-dias" style="display: none;" data-dias="{{ dias|safe }}"></div>
+        <div id="data-progreso" style="display: none;" data-progreso="{{ progreso|safe }}"></div>
+        <div id="data-categorias" style="display: none;" data-categorias="{{ categorias|safe }}"></div>
+      {% else %}
+        <!-- Presentacion -->
+        <section id="presentacion">                   
+          <h1>
+            Mejores Habitos,<br>
+            Mejor Vida
+          </h1>
+          <p>
+            Aproveche el poder de nuestra aplicación personalizada de seguimiento de hábitos para optimizar sus rutinas diarias y alcanzar sus objetivos.
+          </p>
+          <p><a href="{% url 'register' %}">Probar HabitTrack</a></p>
+          <img src="{% static 'images/habits.png' %}" alt="">
+        </section>
+      {% endif %}
     </div>
-    {% endif %}
+    {% block scripts %}
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <script src="{% static 'js/index.js' %}"></script>
+    {% endblock %}
   {% endblock %}

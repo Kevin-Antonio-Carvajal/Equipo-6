@@ -10,7 +10,8 @@ CREATE TABLE `Usuario` (
     `nombre` VARCHAR(255) NOT NULL,
     `correo` VARCHAR(255) NOT NULL UNIQUE,
     `username` VARCHAR(64) NOT NULL UNIQUE,
-    `password` VARCHAR(64) NOT NULL
+    `password` VARCHAR(64) NOT NULL,
+    `created_date` DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 -- Llave primaria --
 ALTER TABLE `Usuario`
@@ -137,3 +138,23 @@ FOREIGN KEY (`id_habito`) REFERENCES `Habito`(`id_habito`)
 ON DELETE CASCADE
 ON UPDATE CASCADE;
 
+--
+-- TABLA NOTIFICACION
+--
+CREATE TABLE `Notificacion` (
+    `id_notificacion` INT NOT NULL AUTO_INCREMENT UNIQUE,
+    `id_habito` INT NOT NULL,
+    `titulo` VARCHAR(64),
+    `descripcion` VARCHAR(255),
+    `estatus` BOOLEAN NOT NULL DEFAULT FALSE
+)
+-- Llave primaria
+ALTER TABLE `Notificacion`
+ADD CONSTRAINT `pk_Notificacion`
+PRIMARY KEY (`id_notificacion`);
+-- Llave foranea
+ALTER TABLE `Notificacion`
+ADD CONSTRAINT `fk_Notificacion`
+FOREIGN KEY (`id_habito`) REFERENCES `Habito` (`id_habito`)
+ON DELETE CASCADE,
+ON UPDATE CASCADE;

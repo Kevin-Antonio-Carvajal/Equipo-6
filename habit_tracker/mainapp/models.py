@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 # TABLA USUARIO
 class Usuario(models.Model):
@@ -7,6 +8,7 @@ class Usuario(models.Model):
     correo = models.EmailField(max_length=255, unique=True)  # VARCHAR(255), UNIQUE
     username = models.CharField(max_length=64, unique=True)  # VARCHAR(64), UNIQUE
     password = models.CharField(max_length=64)  # VARCHAR(64)
+    created_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.username
@@ -88,3 +90,13 @@ class Recordatorio(models.Model):
     def __str__(self):
         return f"Recordatorio para {self.id_habito} a las {self.hora}"
 
+# TABLA NOTIFICACION
+class Notificacion(models.Model):
+    id_notificacion = models.AutoField(primary_key=True)  # AUTO_INCREMENT y PRIMARY KEY        
+    id_habito = models.ForeignKey('Habito', on_delete=models.CASCADE)  # ForeignKey a Habito
+    titulo = models.CharField(max_length=64)  # VARCHAR(64)
+    descripcion = models.CharField(max_length=255, null=True, blank=True)  # VARCHAR(255)
+    estatus = models.BooleanField(default=False)  # BOOLEAN con DEFAULT FALSE
+    mensaje_motivacional = models.CharField(max_length=255, null=True, blank=True)  # Mensaje opcional
+    def __str__(self):
+        return f"{self.titulo}: {self.mensaje_motivacional or 'Mantente motivado!'}"
