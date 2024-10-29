@@ -1,4 +1,4 @@
-# Equipo-6
+# Proyecto Intermedio Equipo 6
 
 # Aplicación de Seguimiento de Hábitos
 Repositorio oficial del Proyecto Intermedio "Aplicación de Seguimiento de Hábitos" para la materia de **Diseño de Interfaces de Usuario** de la **Facultad de Ciencias de la UNAM** en el semestre 2025-1.
